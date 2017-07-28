@@ -5,7 +5,7 @@ using System.Net;
 
 namespace QnA
 {
-    public class Class1
+    public class QnARequest
     {
         // Идентификатор базы знаний
         const string KnowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
