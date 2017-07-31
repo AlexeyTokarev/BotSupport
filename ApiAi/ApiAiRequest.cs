@@ -32,17 +32,45 @@ namespace ApiAi
 
             if (response.Result.Parameters.ContainsKey("Platform"))
             {
-                result.Platform = response.Result.Parameters["Platform"].ToString();
+                string platform = response.Result.Parameters["Platform"].ToString();
+
+                if (platform == "223-ФЗ" || platform == "44-ФЗ" || platform == "615-ФЗ" || platform == "Имущество" ||
+                    platform == "РТС-Маркет")
+                {
+                    result.Platform = platform;
+                }
+                else
+                {
+                    result.Platform = null;
+                }
             }
 
             if (response.Result.Parameters.ContainsKey("Role"))
             {
-                result.Role = response.Result.Parameters["Role"].ToString();
+                string role = response.Result.Parameters["Role"].ToString();
+
+                if (role == "Поставщик" || role == "Заказчик")
+                {
+                    result.Role = role;
+                }
+                else
+                {
+                    result.Role = null;
+                }
             }
 
             if (response.Result.Parameters.ContainsKey("Type"))
             {
-                result.Type = response.Result.Parameters["Type"].ToString();
+                string type = response.Result.Parameters["Type"].ToString();
+
+                if (type == "ИП" || type == "ФЛ" || type == "ЮЛ")
+                {
+                    result.Type = type;
+                }
+                else
+                {
+                    result.Type = null;
+                }
             }
 
             return result;
