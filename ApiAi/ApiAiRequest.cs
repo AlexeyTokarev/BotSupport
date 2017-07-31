@@ -1,6 +1,5 @@
 ﻿using ApiAiSDK;
 using System;
-using System.Linq;
 
 namespace ApiAi
 {

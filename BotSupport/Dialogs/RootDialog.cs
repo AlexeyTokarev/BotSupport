@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using ApiAi;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using ApiAi;
 using QnA;
+using System;
+using System.Threading.Tasks;
 
 namespace BotSupport.Dialogs
 {
@@ -20,21 +20,19 @@ namespace BotSupport.Dialogs
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
-
             return Task.CompletedTask;
         }
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+
             if (parametrs == false)
             {
                 //// calculate something for us to return
                 //int length = (activity.Text ?? string.Empty).Length;
                 if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
                 {
-
-
                     if (!string.IsNullOrWhiteSpace(activity.Text))
                     {
                         var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
@@ -51,9 +49,10 @@ namespace BotSupport.Dialogs
                             // Проверка наличия, добавление или редактирование параметра "Площадка"
                             if (!string.IsNullOrEmpty(platform))
                             {
-                                if ((platform != apiAiResponse.Platform) &&
-                                    (!string.IsNullOrEmpty(apiAiResponse.Platform)))
+                                if ((platform != apiAiResponse.Platform) && (!string.IsNullOrEmpty(apiAiResponse.Platform)))
+                                {
                                     platform = apiAiResponse.Platform;
+                                }
                             }
                             else
                             {
@@ -64,7 +63,9 @@ namespace BotSupport.Dialogs
                             if (!string.IsNullOrEmpty(role))
                             {
                                 if ((role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
+                                {
                                     role = apiAiResponse.Role;
+                                }
                             }
                             else
                             {
@@ -75,7 +76,9 @@ namespace BotSupport.Dialogs
                             if (!string.IsNullOrEmpty(type))
                             {
                                 if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
+                                {
                                     type = apiAiResponse.Type;
+                                }
                             }
                             else
                             {
@@ -101,7 +104,6 @@ namespace BotSupport.Dialogs
                         parametrs = true;
                         await context.PostAsync("Напишите теперь интересующую Вас тему.");
                         activity.Text = null;
-                        //await context.PostAsync(QnABotResponse(activity.Text));
                     }
 
                 }
@@ -112,11 +114,11 @@ namespace BotSupport.Dialogs
                 }
             }
 
-            if (!string.IsNullOrEmpty(activity.Text)&&parametrs==true)
+            if (!string.IsNullOrEmpty(activity.Text) && parametrs == true)
             {
                 await context.PostAsync(QnABotResponse(activity.Text));
             }
-            
+
             context.Wait(MessageReceivedAsync);
         }
 
@@ -198,15 +200,16 @@ namespace BotSupport.Dialogs
                 qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
             }
 
-            if (platform == "44-ФЗ") {};
-            if (platform == "615-ФЗ") {};
-            if (platform == "Имущество") {};
-            if (platform == "РТС-Маркет") {};
+            if (platform == "44-ФЗ") { };
+            if (platform == "615-ФЗ") { };
+            if (platform == "Имущество") { };
+            if (platform == "РТС-Маркет") { };
         }
 
         string QnABotResponse(string qnaResponse)
         {
             QnAMakerKey();
+
             string qnaResult = QnARequest.QnAResponse(knowledgebaseId, qnamakerSubscriptionKey, qnaResponse);
             return qnaResult;
         }

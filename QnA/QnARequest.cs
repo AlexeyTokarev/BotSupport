@@ -14,6 +14,7 @@ namespace QnA
         {
             string responseString;
             string qnaResult;
+
             // Вписать адрес для работы с классом URI
             var qnamakerUriBase = new Uri(UrlAddress);
             var builder = new UriBuilder($"{qnamakerUriBase}/knowledgebases/{knowledgebaseId}/generateAnswer");
@@ -44,20 +45,25 @@ namespace QnA
                 var response = JsonConvert.DeserializeObject<Response>(responseString);
 
                 var firstOrDefault = response.Answers.FirstOrDefault();
-                qnaResult = firstOrDefault.PossibleAnswer.ToString();
 
-                //if (firstOrDefault != null)
-                //{
-                //    return qnaResult;
-                //}
-                //else
-                //{
-                //    return "Извините, произошла ошибка, попробуйте еще раз";
-                //}
+                qnaResult = firstOrDefault.PossibleAnswer.ToString();
             }
 
-            if (!string.IsNullOrEmpty(qnaResult)) return qnaResult;
-            else return "Извините, произошла ошибка, попробуйте еще раз";
+            if (!string.IsNullOrEmpty(qnaResult))
+            {
+                if (qnaResult == "No good match found in the KB")
+                {
+                    return "Прошу прощения, но я не понял вопроса. Попробуйте перефразировать его.";
+                }
+                else
+                {
+                    return qnaResult;
+                }
+            }
+            else
+            {
+                return "Извините, произошла ошибка, попробуйте еще раз";
+            }
         }
     }
 }
