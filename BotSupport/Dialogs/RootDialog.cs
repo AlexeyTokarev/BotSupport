@@ -13,7 +13,7 @@ namespace BotSupport.Dialogs
         private string platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
         private string role; // Какова роль пользователя ("Заказчик", "Поставщик")
         private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
-        private bool parametrs = false;
+        private bool parametrs = false; // Быстрая проверка наличия всех параметров
         private string knowledgebaseId; // Идентификатор базы знаний для бота QnA Maker
         private string qnamakerSubscriptionKey; // Использование ключа подписи в QnA Maker
 
@@ -100,6 +100,7 @@ namespace BotSupport.Dialogs
                     {
                         parametrs = true;
                         await context.PostAsync("Напишите теперь интересующую Вас тему.");
+                        activity.Text = null;
                         //await context.PostAsync(QnABotResponse(activity.Text));
                     }
 
@@ -111,16 +112,11 @@ namespace BotSupport.Dialogs
                 }
             }
 
-            if (!string.IsNullOrEmpty(activity.Text))
+            if (!string.IsNullOrEmpty(activity.Text)&&parametrs==true)
             {
                 await context.PostAsync(QnABotResponse(activity.Text));
             }
-
-            else
-            {
-                await context.PostAsync("Извините, что-то пошло не так. Повторите, пожалуйста попытку");
-            }
-
+            
             context.Wait(MessageReceivedAsync);
         }
 
