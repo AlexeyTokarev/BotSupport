@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace BotSupport.Dialogs
+﻿namespace BotSupport.Dialogs
 {
-    public class ParametrsDialog : RootDialog
+    /// <summary>
+    /// Класс служит помощником в определении недостающих параметров с последующей подсказкой пользователю
+    /// </summary>
+    public class ParametrsDialog
     {
         /// <summary>
-        /// Определяет, какие параметры у нас заполнены, а какие нет
+        /// Метод определяет, какие параметры у нас заполнены, а какие нет
         /// </summary>
         /// <returns></returns>
         public static string CheckParametrs(string platform, string role, string type)
