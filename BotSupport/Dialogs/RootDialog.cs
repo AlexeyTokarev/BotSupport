@@ -29,8 +29,6 @@ namespace BotSupport.Dialogs
 
             if (parametrs == false)
             {
-                //// calculate something for us to return
-                //int length = (activity.Text ?? string.Empty).Length;
                 if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
                 {
                     if (!string.IsNullOrWhiteSpace(activity.Text))
@@ -87,8 +85,6 @@ namespace BotSupport.Dialogs
                         }
                     }
 
-                    // return our reply to the user
-                    //await context.PostAsync($"Текст твоего запроса => {activity.Text}");
                     else
                     {
                         await context.PostAsync("Что-то пошло не так, повторите попытку");
@@ -97,7 +93,7 @@ namespace BotSupport.Dialogs
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
                     if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
                     {
-                        await context.PostAsync(CheckParametrs());
+                        await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
                     }
                     else
                     {
@@ -122,88 +118,22 @@ namespace BotSupport.Dialogs
             context.Wait(MessageReceivedAsync);
         }
 
-        /// <summary>
-        /// Определяет, какие параметры у нас заполнены, а какие нет
-        /// </summary>
-        /// <returns></returns>
-        string CheckParametrs()
-        {
-            // Не заполнены поля "Площадка", "Роль", "Тип"
-            if (string.IsNullOrEmpty(platform) && string.IsNullOrEmpty(role) && string.IsNullOrEmpty(type))
-            {
-                return "Прежде чем дать консультацию, я должен понимать, кем Вы являетесь. Дайте мне, пожалуйста, некоторую информацию о Вас (отвечайте на вопросы по очереди):\n" +
-                    "1. Кто Вы: заказчик или поставщик?\n" +
-                    "2. Какая площадка Вас интересует: 223-ФЗ, 44-ФЗ, 615-ФЗ, Имущество или РТС-Маркет?\n" +
-                    "3. К какому типу Вы относитесь: индивидуальный предприниматель, физическое лицо или юридическое лицо?\n";
-            }
-
-            // Заполнено: "Площадка"
-            // Не заполнено: "Роль" и "Тип"
-            if (!string.IsNullOrEmpty(platform) && string.IsNullOrEmpty(role) && string.IsNullOrEmpty(type))
-            {
-                return "Для более полной информации я еще должен уточнить некоторые детали:\n" +
-                       "1. Кто Вы: заказчик или поставщик?\n" +
-                       "2. К какому типу Вы относитесь: индивидуальный предприниматель, физическое лицо или юридическое лицо?\n";
-            }
-
-            // Заполнено:  "Роль"
-            // Не заполнено: "Площадка" и "Тип"
-            if (string.IsNullOrEmpty(platform) && !string.IsNullOrEmpty(role) && string.IsNullOrEmpty(type))
-            {
-                return "Для более полной информации я еще должен уточнить некоторые детали:\n" +
-                       "1. Какая площадка Вас интересует: 223-ФЗ, 44-ФЗ, 615-ФЗ, Имущество или РТС-Маркет?\n" +
-                       "2. К какому типу Вы относитесь: индивидуальный предприниматель, физическое лицо или юридическое лицо?\n";
-            }
-
-            // Заполнено: "Тип"
-            // Не заполнено: "Площадка" и "Роль"
-            if (string.IsNullOrEmpty(platform) && string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(type))
-            {
-                return "Для более полной информации я еще должен уточнить некоторые детали:\n" +
-                       "1. Кто Вы: заказчик или поставщик?\n" +
-                       "2. Какая площадка Вас интересует: 223-ФЗ, 44-ФЗ, 615-ФЗ, Имущество или РТС-Маркет?\n";
-            }
-
-            // Заполнено: "Площадка" и "Роль"
-            // Не заполнено: "Тип"
-            if (!string.IsNullOrEmpty(platform) && !string.IsNullOrEmpty(role) && string.IsNullOrEmpty(type))
-            {
-                return
-                    "Для более полной информации я еще должен уточнить к какому типу Вы относитесь: " +
-                    "индивидуальный предприниматель, физическое лицо или юридическое лицо?\n";
-            }
-
-            // Заполнено: "Площадка" и "Тип"
-            // Не заполнено: "Роль" 
-            if (!string.IsNullOrEmpty(platform) && string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(type))
-            {
-                return "Для более полной информации я еще должен уточнить кто Вы: заказчик или поставщик?\n";
-            }
-
-            // Заполнено: "Роль" и "Тип"
-            // Не заполнено: "Площадка"
-            if (string.IsNullOrEmpty(platform) && !string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(type))
-            {
-                return
-                    "Для более полной информации я еще должен уточнить какая площадка Вас интересует: " +
-                    "223-ФЗ, 44-ФЗ, 615-ФЗ, Имущество или РТС-Маркет?\n";
-            }
-
-            return "Что-то пошло не так, попробуйте еще раз";
-        }
-
         public void QnAMakerKey()
         {
-            if (platform == "223-ФЗ")
+            switch (platform)
             {
-                knowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
-                qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-            }
+                case "223-ФЗ":
+                    {
+                        knowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
+                    }
 
-            if (platform == "44-ФЗ") { };
-            if (platform == "615-ФЗ") { };
-            if (platform == "Имущество") { };
-            if (platform == "РТС-Маркет") { };
+                case "44-ФЗ": { break; }
+                case "615-ФЗ": { break; }
+                case "Имущество": { break; }
+                case "РТС-Маркет": { break; }
+            }
         }
 
         string QnABotResponse(string qnaResponse)
