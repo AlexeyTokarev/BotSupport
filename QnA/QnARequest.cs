@@ -46,7 +46,7 @@ namespace QnA
 
                 var firstOrDefault = response.Answers.FirstOrDefault();
 
-                qnaResult = firstOrDefault.PossibleAnswer.ToString();
+                qnaResult = firstOrDefault?.PossibleAnswer.ToString();
             }
 
             if (!string.IsNullOrEmpty(qnaResult))
@@ -57,7 +57,7 @@ namespace QnA
                 }
                 else
                 {
-                    return qnaResult;
+                    return qnaResult.Replace(@"\n", Environment.NewLine);
                 }
             }
             else

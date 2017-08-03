@@ -2,6 +2,7 @@
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BotSupport.Dialogs
@@ -12,7 +13,7 @@ namespace BotSupport.Dialogs
         private string platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
         private string role; // Какова роль пользователя ("Заказчик", "Поставщик")
         private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
-        private bool parametrs = false; // Быстрая проверка наличия всех параметров
+        private bool parametrs; // Быстрая проверка наличия всех параметров
 
         public Task StartAsync(IDialogContext context)
         {
@@ -28,7 +29,7 @@ namespace BotSupport.Dialogs
             {
                 if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
                 {
-                    if (!string.IsNullOrWhiteSpace(activity.Text))
+                    if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
                         var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
 
@@ -105,9 +106,10 @@ namespace BotSupport.Dialogs
                 }
             }
 
-            if (!string.IsNullOrEmpty(activity.Text) && parametrs == true)
+            if (!string.IsNullOrEmpty(activity?.Text) && parametrs == true)
             {
-                await context.PostAsync(new QnADialog().QnABotResponse(platform, activity.Text));
+                var answer = new QnADialog().QnABotResponse(platform, activity.Text);
+                await context.PostAsync(answer);
             }
 
             context.Wait(MessageReceivedAsync);
