@@ -2,7 +2,6 @@
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BotSupport.Dialogs
@@ -24,6 +23,13 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+            if (ResetParametrs.Reset(activity?.Text))
+            {
+                platform = null;
+                role = null;
+                type = null;
+                parametrs = false;
+            }
 
             if (parametrs == false)
             {
