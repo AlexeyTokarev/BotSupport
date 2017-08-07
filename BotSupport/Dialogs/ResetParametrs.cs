@@ -21,7 +21,10 @@ namespace BotSupport.Dialogs
                 "перезапустить",
                 "отмена",
                 "отменить",
-                "обновить"
+                "обновить",
+                "привет",
+                "здравствуйте",
+                "сбросить"
             };
 
             return resetPhrases.Contains(query.ToLower());
