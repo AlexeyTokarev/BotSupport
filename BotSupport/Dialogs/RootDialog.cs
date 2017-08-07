@@ -132,7 +132,6 @@ namespace BotSupport.Dialogs
                     await context.PostAsync(answer);
                 }
             }
-
             context.Wait(MessageReceivedAsync);
         }
     }

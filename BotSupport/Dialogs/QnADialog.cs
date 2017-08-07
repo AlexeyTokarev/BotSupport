@@ -1,4 +1,5 @@
-﻿using QnA;
+﻿using System.Text.RegularExpressions;
+using QnA;
 
 namespace BotSupport.Dialogs
 {
@@ -43,6 +44,11 @@ namespace BotSupport.Dialogs
             QnAMakerKey(platform);
 
             string qnaResult = QnARequest.QnAResponse(knowledgebaseId, qnamakerSubscriptionKey, qnaResponse);
+
+            // Добавлена очистка от ненужных символов
+            Regex regex = new Regex(@"&#\d{3};");
+            qnaResult = regex.Replace(qnaResult, " ");
+
             return qnaResult;
         }
     }
