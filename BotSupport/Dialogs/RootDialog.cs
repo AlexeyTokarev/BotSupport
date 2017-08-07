@@ -117,13 +117,13 @@ namespace BotSupport.Dialogs
                 var answer = new QnADialog().QnABotResponse(platform, activity.Text);
 
                 // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
-                if (answer.Length > 4000)
+                if (answer.Length > 3500)
                 {
-                    while (answer.Length > 4000)
+                    while (answer.Length > 3500)
                     {
-                        string subanswer = answer.Substring(0, 4000);
+                        string subanswer = answer.Substring(0, 3500);
                         await context.PostAsync(subanswer);
-                        answer = answer.Remove(0, 4000);
+                        answer = answer.Remove(0, 3500);
                     }
                     await context.PostAsync(answer);
                 }
