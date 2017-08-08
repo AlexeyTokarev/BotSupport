@@ -115,15 +115,25 @@ namespace BotSupport.Dialogs
             if (!string.IsNullOrEmpty(activity?.Text) && parametrs == true)
             {
                 var answer = new QnADialog().QnABotResponse(platform, activity.Text);
-
+                
                 // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
                 if (answer.Length > 3500)
                 {
                     while (answer.Length > 3500)
                     {
-                        string subanswer = answer.Substring(0, 3500);
+                        var substringPoint = 3500;
+
+                        // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
+                        // Причем разделение проводится по предложениям (Ориентиром является точка)
+                        while (answer[substringPoint] != '.')
+                        {
+                            substringPoint--;
+                        }
+                        
+                        var subanswer = answer.Substring(0, substringPoint + 1);
+
                         await context.PostAsync(subanswer);
-                        answer = answer.Remove(0, 3500);
+                        answer = answer.Remove(0, substringPoint + 1);
                     }
                     await context.PostAsync(answer);
                 }
