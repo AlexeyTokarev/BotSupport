@@ -21,15 +21,19 @@ namespace BotSupport.Dialogs
             switch (platform)
             {
                 case "223-ФЗ":
-                {
-                    knowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
-                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                    break;
-                }
+                    {
+                        knowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
+                    }
 
                 case "44-ФЗ": { break; }
                 case "615-ФЗ": { break; }
-                case "Имущество": { break; }
+                case "Имущество":
+                    {
+                        knowledgebaseId = "89b2fccf-f3bc-4021-8ab1-0496865a8ba2";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d"; break;
+                    }
                 case "РТС-Маркет": { break; }
             }
         }
@@ -49,7 +53,7 @@ namespace BotSupport.Dialogs
             // Добавлена очистка от ненужных символов
             //Regex regex = new Regex(@"&#\d{3};");
             //qnaResult = regex.Replace(qnaResult, " ");
-            
+
             return HttpUtility.HtmlDecode(qnaResult);
         }
     }
