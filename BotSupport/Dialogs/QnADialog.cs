@@ -28,7 +28,11 @@ namespace BotSupport.Dialogs
                     }
 
                 case "44-ФЗ": { break; }
-                case "615-ФЗ": { break; }
+                case "615-ФЗ":
+                {
+                    knowledgebaseId = "71728f39-34d9-4dbb-bfbe-85d8fb2dfa96";
+                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d"; break;
+                }
                 case "Имущество":
                     {
                         knowledgebaseId = "89b2fccf-f3bc-4021-8ab1-0496865a8ba2";
