@@ -26,19 +26,30 @@ namespace BotSupport.Dialogs
                         qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
-
-                case "44-ФЗ": { break; }
+                case "44-ФЗ":
+                    {
+                        knowledgebaseId = "254ec291-e15d-45d0-99c5-15593f38599c";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
+                    }
                 case "615-ФЗ":
-                {
-                    knowledgebaseId = "71728f39-34d9-4dbb-bfbe-85d8fb2dfa96";
-                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d"; break;
-                }
+                    {
+                        knowledgebaseId = "71728f39-34d9-4dbb-bfbe-85d8fb2dfa96";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
+                    }
                 case "Имущество":
                     {
                         knowledgebaseId = "89b2fccf-f3bc-4021-8ab1-0496865a8ba2";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d"; break;
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
                     }
-                case "РТС-Маркет": { break; }
+                case "РТС-Маркет":
+                    {
+                        knowledgebaseId = "49bb744a-b569-43a1-a905-f9bdcdbc6aa4";
+                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                        break;
+                    }
             }
         }
 
