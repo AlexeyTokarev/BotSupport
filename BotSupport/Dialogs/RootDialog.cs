@@ -31,6 +31,7 @@ namespace BotSupport.Dialogs
                     role = null;
                     //type = null;
                     parametrs = false;
+                    context.Wait(MessageReceivedAsync);
                 }
             }
             catch (Exception ex)
@@ -102,8 +103,7 @@ namespace BotSupport.Dialogs
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)
-                    ) // || string.IsNullOrEmpty(type)
+                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
                     {
                         //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
                         string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
@@ -192,7 +192,6 @@ namespace BotSupport.Dialogs
                 }
             }
             //context.Wait(MessageReceivedAsync);
-
         }
     }
 }
