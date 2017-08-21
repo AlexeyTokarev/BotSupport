@@ -15,7 +15,7 @@ namespace BotSupport.Dialogs
         /// <param name="context"></param>
         /// <param name="activity"></param>
         /// <param name="checkParametrs"></param>
-        public static async void PlatformCard(IDialogContext context, Activity activity, string checkParametrs)
+        public static void PlatformCard(IDialogContext context, Activity activity, string checkParametrs)
         {
             try
             {
@@ -64,13 +64,13 @@ namespace BotSupport.Dialogs
                 //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
                 replyToConversation.Attachments.Add(attach);
-                await context.PostAsync(replyToConversation);
-                await context.PostAsync("4");
+                context.PostAsync(replyToConversation);
+                context.PostAsync("4");
             }
             catch (Exception e)
             {
-                await context.PostAsync("3");
-                await context.PostAsync(e.Message + " Error code 1.");
+                context.PostAsync("3");
+                context.PostAsync(e.Message + " Error code 1.");
             }
         }
 
