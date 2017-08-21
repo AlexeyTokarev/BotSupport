@@ -19,58 +19,56 @@ namespace BotSupport.Dialogs
         {
             try
             {
+                var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
+                replyToConversation.Attachments = new List<Attachment>();
 
+                var cardButton = new List<CardAction>();
+                var card1 = new CardAction()
+                {
+                    Value = "223-ФЗ",
+                    Title = "223-ФЗ"
+                };
+                var card2 = new CardAction()
+                {
+                    Value = "44-ФЗ",
+                    Title = "44-ФЗ"
+                };
+                var card3 = new CardAction()
+                {
+                    Value = "615-ФЗ",
+                    Title = "615-ФЗ"
+                };
+                var card4 = new CardAction()
+                {
+                    Value = "Имущество",
+                    Title = "Имущество"
+                };
+                var card5 = new CardAction()
+                {
+                    Value = "РТС-Маркет",
+                    Title = "РТС-Маркет"
+                };
 
-            var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
-            replyToConversation.Attachments = new List<Attachment>();
+                cardButton.Add(card1);
+                cardButton.Add(card2);
+                cardButton.Add(card3);
+                cardButton.Add(card4);
+                cardButton.Add(card5);
 
-            var cardButton = new List<CardAction>();
-            var card1 = new CardAction()
-            {
-                Value = "223-ФЗ",
-                Title = "223-ФЗ"
-            };
-            var card2 = new CardAction()
-            {
-                Value = "44-ФЗ",
-                Title = "44-ФЗ"
-            };
-            var card3 = new CardAction()
-            {
-                Value = "615-ФЗ",
-                Title = "615-ФЗ"
-            };
-            var card4 = new CardAction()
-            {
-                Value = "Имущество",
-                Title = "Имущество"
-            };
-            var card5 = new CardAction()
-            {
-                Value = "РТС-Маркет",
-                Title = "РТС-Маркет"
-            };
+                var hero = new HeroCard()
+                {
+                    Buttons = cardButton,
+                    Text = checkParametrs
+                };
+                var attach = hero.ToAttachment();
+                //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
-            cardButton.Add(card1);
-            cardButton.Add(card2);
-            cardButton.Add(card3);
-            cardButton.Add(card4);
-            cardButton.Add(card5);
-
-            var hero = new HeroCard()
-            {
-                Buttons = cardButton,
-                Text = checkParametrs
-            };
-            var attach = hero.ToAttachment();
-            //if (attach == null) throw new ArgumentNullException(nameof(attach));
-
-            replyToConversation.Attachments.Add(attach);
-            await context.PostAsync(replyToConversation);
+                replyToConversation.Attachments.Add(attach);
+                await context.PostAsync(replyToConversation);
             }
             catch (Exception e)
             {
-                await context.PostAsync(e.Message+" Error code 1.");
+                await context.PostAsync(e.Message + " Error code 1.");
             }
         }
 

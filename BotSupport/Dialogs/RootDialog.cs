@@ -117,7 +117,8 @@ namespace BotSupport.Dialogs
                             }
                             catch (Exception ex)
                             {
-                                await context.PostAsync(ex.Message);
+                                await context.PostAsync("1");
+                                //await context.PostAsync(ex.Message);
                             }
                         }
 
