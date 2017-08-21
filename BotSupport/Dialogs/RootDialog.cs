@@ -22,145 +22,155 @@ namespace BotSupport.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            var activity = await result as Activity;
-            if (ResetParametrs.Reset(activity?.Text))
+            try
             {
-                platform = null;
-                role = null;
-                //type = null;
-                parametrs = false;
-            }
-
-            if (parametrs == false)
-            {
-                if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role))// || string.IsNullOrEmpty(type)
+                var activity = await result as Activity;
+                if (ResetParametrs.Reset(activity?.Text))
                 {
-                    if (!string.IsNullOrWhiteSpace(activity?.Text))
-                    {
-                        var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
+                    platform = null;
+                    role = null;
+                    //type = null;
+                    parametrs = false;
+                }
 
-                        // Если есть ошибки
-                        if (apiAiResponse.Errors != null && apiAiResponse.Errors.Count > 0)
+                if (parametrs == false)
+                {
+                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
+                    {
+                        if (!string.IsNullOrWhiteSpace(activity?.Text))
+                        {
+                            var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
+
+                            // Если есть ошибки
+                            if (apiAiResponse.Errors != null && apiAiResponse.Errors.Count > 0)
+                            {
+                                await context.PostAsync("Что-то пошло не так, повторите попытку");
+                            }
+
+                            // Если нет ошибок
+                            else
+                            {
+                                // Проверка наличия, добавление или редактирование параметра "Площадка"
+                                if (!string.IsNullOrEmpty(platform))
+                                {
+                                    if ((platform != apiAiResponse.Platform) &&
+                                        (!string.IsNullOrEmpty(apiAiResponse.Platform)))
+                                    {
+                                        platform = apiAiResponse.Platform;
+                                    }
+                                }
+                                else
+                                {
+                                    platform = apiAiResponse.Platform;
+                                }
+
+                                // Проверка наличия, добавление или редактирование параметра "Роль"
+                                if (!string.IsNullOrEmpty(role))
+                                {
+                                    if ((role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
+                                    {
+                                        role = apiAiResponse.Role;
+                                    }
+                                }
+                                else
+                                {
+                                    role = apiAiResponse.Role;
+                                }
+
+                                //// Проверка наличия, добавление или редактирование параметра "Тип"
+                                //if (!string.IsNullOrEmpty(type))
+                                //{
+                                //    if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
+                                //    {
+                                //        type = apiAiResponse.Type;
+                                //    }
+                                //}
+                                //else
+                                //{
+                                //    type = apiAiResponse.Type;
+                                //}
+                            }
+                        }
+                        else
                         {
                             await context.PostAsync("Что-то пошло не так, повторите попытку");
                         }
 
-                        // Если нет ошибок
+                        // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
+                        if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)
+                        ) // || string.IsNullOrEmpty(type)
+                        {
+                            //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
+                            string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
+
+                            if (string.IsNullOrEmpty(platform))
+                            {
+                                CardDialog.PlatformCard(context, activity, checkParametrs);
+                            }
+
+                            if (string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(platform))
+                            {
+                                if (platform == "Имущество")
+                                {
+                                    CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                                }
+                                else
+                                {
+                                    CardDialog.RoleCard(context, activity, checkParametrs);
+                                }
+                            }
+                        }
                         else
                         {
-                            // Проверка наличия, добавление или редактирование параметра "Площадка"
-                            if (!string.IsNullOrEmpty(platform))
-                            {
-                                if ((platform != apiAiResponse.Platform) && (!string.IsNullOrEmpty(apiAiResponse.Platform)))
-                                {
-                                    platform = apiAiResponse.Platform;
-                                }
-                            }
-                            else
-                            {
-                                platform = apiAiResponse.Platform;
-                            }
-
-                            // Проверка наличия, добавление или редактирование параметра "Роль"
-                            if (!string.IsNullOrEmpty(role))
-                            {
-                                if ((role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
-                                {
-                                    role = apiAiResponse.Role;
-                                }
-                            }
-                            else
-                            {
-                                role = apiAiResponse.Role;
-                            }
-
-                            //// Проверка наличия, добавление или редактирование параметра "Тип"
-                            //if (!string.IsNullOrEmpty(type))
-                            //{
-                            //    if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
-                            //    {
-                            //        type = apiAiResponse.Type;
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    type = apiAiResponse.Type;
-                            //}
-                        }
-                    }
-                    else
-                    {
-                        await context.PostAsync("Что-то пошло не так, повторите попытку");
-                    }
-
-                    // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role))// || string.IsNullOrEmpty(type)
-                    {
-                        //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
-                        string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
-
-                        if (string.IsNullOrEmpty(platform))
-                        {
-                            CardDialog.PlatformCard(context, activity, checkParametrs);
-                        }
-                        
-                        if (string.IsNullOrEmpty(role)&&!string.IsNullOrEmpty(platform))
-                        {
-                            if (platform == "Имущество")
-                            {
-                                CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
-                            }
-                            else
-                            {
-                                CardDialog.RoleCard(context, activity, checkParametrs);
-                            }
+                            parametrs = true;
+                            await context.PostAsync(
+                                "Напишите теперь интересующую Вас тему. Для возврата в исходное состояние наберите слово \"сброс\"");
+                            activity.Text = null;
                         }
                     }
                     else
                     {
                         parametrs = true;
-                        await context.PostAsync("Напишите теперь интересующую Вас тему. Для возврата в исходное состояние наберите слово \"сброс\"");
-                        activity.Text = null;
+                        await context.PostAsync("Напишите теперь интересующую Вас тему.");
                     }
                 }
-                else
-                {
-                    parametrs = true;
-                    await context.PostAsync("Напишите теперь интересующую Вас тему.");
-                }
-            }
 
-            if (!string.IsNullOrEmpty(activity?.Text) && parametrs == true)
-            {
-                var answer = new QnADialog().QnABotResponse(platform, activity.Text);
-                
-                // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
-                if (answer.Length > 3500)
+                if (!string.IsNullOrEmpty(activity?.Text) && parametrs == true)
                 {
-                    while (answer.Length > 3500)
+                    var answer = new QnADialog().QnABotResponse(platform, activity.Text);
+
+                    // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
+                    if (answer.Length > 3500)
                     {
-                        var substringPoint = 3500;
-
-                        // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
-                        // Причем разделение проводится по предложениям (Ориентиром является точка)
-                        while (answer[substringPoint] != '.')
+                        while (answer.Length > 3500)
                         {
-                            substringPoint--;
-                        }
-                        
-                        var subanswer = answer.Substring(0, substringPoint + 1);
+                            var substringPoint = 3500;
 
-                        await context.PostAsync(subanswer);
-                        answer = answer.Remove(0, substringPoint + 1);
+                            // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
+                            // Причем разделение проводится по предложениям (Ориентиром является точка)
+                            while (answer[substringPoint] != '.')
+                            {
+                                substringPoint--;
+                            }
+
+                            var subanswer = answer.Substring(0, substringPoint + 1);
+
+                            await context.PostAsync(subanswer);
+                            answer = answer.Remove(0, substringPoint + 1);
+                        }
+                        await context.PostAsync(answer);
                     }
-                    await context.PostAsync(answer);
+                    else
+                    {
+                        await context.PostAsync(answer);
+                    }
                 }
-                else
-                {
-                    await context.PostAsync(answer);
-                }
+                context.Wait(MessageReceivedAsync);
             }
-            context.Wait(MessageReceivedAsync);
+            catch (Exception ex)
+            {
+                await context.PostAsync(ex.Message);
+            }
         }
     }
 }
