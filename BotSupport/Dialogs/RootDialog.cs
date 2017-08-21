@@ -25,12 +25,19 @@ namespace BotSupport.Dialogs
             try
             {
                 var activity = await result as Activity;
-                if (ResetParametrs.Reset(activity?.Text))
+                try
                 {
-                    platform = null;
-                    role = null;
-                    //type = null;
-                    parametrs = false;
+                    if (ResetParametrs.Reset(activity?.Text))
+                    {
+                        platform = null;
+                        role = null;
+                        //type = null;
+                        parametrs = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await context.PostAsync(ex.Message + "номер 1");
                 }
 
                 if (parametrs == false)
@@ -105,18 +112,39 @@ namespace BotSupport.Dialogs
 
                             if (string.IsNullOrEmpty(platform))
                             {
-                                CardDialog.PlatformCard(context, activity, checkParametrs);
+                                try
+                                {
+                                    CardDialog.PlatformCard(context, activity, checkParametrs);
+                                }
+                                catch (Exception ex)
+                                {
+                                    await context.PostAsync(ex.Message + "номер 4");
+                                }
                             }
 
                             if (string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(platform))
                             {
                                 if (platform == "Имущество")
                                 {
-                                    CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                                    try
+                                    {
+                                        CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        await context.PostAsync(ex.Message + "номер 2");
+                                    }
                                 }
                                 else
                                 {
-                                    CardDialog.RoleCard(context, activity, checkParametrs);
+                                    try
+                                    {
+                                        CardDialog.RoleCard(context, activity, checkParametrs);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        await context.PostAsync(ex.Message + "номер 3");
+                                    }
                                 }
                             }
                         }
@@ -169,8 +197,7 @@ namespace BotSupport.Dialogs
             }
             catch (Exception ex)
             {
-                await context.PostAsync(ex.Message 
-                     + " Hello world!" );
+                await context.PostAsync(ex.Message + "номер 5");
             }
         }
     }
