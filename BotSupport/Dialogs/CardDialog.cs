@@ -65,11 +65,11 @@ namespace BotSupport.Dialogs
 
                 replyToConversation.Attachments.Add(attach);
                 context.PostAsync(replyToConversation);
-                context.PostAsync("4");
+               // context.PostAsync("4");
             }
             catch (Exception e)
             {
-                context.PostAsync("3");
+                //context.PostAsync("3");
                 context.PostAsync(e.Message + " Error code 1.");
             }
         }
