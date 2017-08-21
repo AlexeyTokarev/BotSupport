@@ -17,9 +17,13 @@ namespace BotSupport.Dialogs
         /// <param name="checkParametrs"></param>
         public static async void PlatformCard(IDialogContext context, Activity activity, string checkParametrs)
         {
-            var replyToConversation = activity.CreateReply();//(Activity)context.MakeMessage();
+            try
+            {
+
+
+            var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
             replyToConversation.Attachments = new List<Attachment>();
-            
+
             var cardButton = new List<CardAction>();
             var card1 = new CardAction()
             {
@@ -62,9 +66,12 @@ namespace BotSupport.Dialogs
             //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
             replyToConversation.Attachments.Add(attach);
-            await context.PostAsync("Номер 17");
             await context.PostAsync(replyToConversation);
-            await context.PostAsync("Номер 18");
+            }
+            catch (Exception e)
+            {
+                await context.PostAsync(e.Message);
+            }
         }
 
         /// <summary>
@@ -75,7 +82,7 @@ namespace BotSupport.Dialogs
         /// <param name="checkParametrs"></param>
         public static async void RoleCard(IDialogContext context, Activity activity, string checkParametrs)
         {
-            var replyToConversation = activity.CreateReply();//(Activity)context.MakeMessage();
+            var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
             replyToConversation.Attachments = new List<Attachment>();
 
             var cardButton = new List<CardAction>();
