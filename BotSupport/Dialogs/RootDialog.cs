@@ -28,7 +28,7 @@ namespace BotSupport.Dialogs
             {
                 if (ResetParametrs.Reset(activity?.Text))
                 {
-                    await context.PostAsync("Номер 2");
+                    await context.PostAsync("Номер 2"); 
                     platform = null;
                     role = null;
                     //type = null;
