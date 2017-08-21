@@ -114,7 +114,7 @@ namespace BotSupport.Dialogs
                             {
                                 await context.PostAsync("1");
                                 CardDialog.PlatformCard(context, activity, checkParametrs);
-                                return;
+                                await context.PostAsync("5");
                             }
                             catch (Exception ex)
                             {
