@@ -165,7 +165,7 @@ namespace BotSupport.Dialogs
                         await context.PostAsync(answer);
                     }
                 }
-                context.Wait(MessageReceivedAsync);
+                //context.Wait(MessageReceivedAsync);
             }
             catch (Exception ex)
             {
