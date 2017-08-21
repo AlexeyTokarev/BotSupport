@@ -49,7 +49,7 @@ namespace ApiAi
             {
                 string role = response.Result.Parameters["Role"].ToString();
 
-                if (role == "Поставщик" || role == "Заказчик")
+                if (role == "Поставщик" || role == "Заказчик" || role == "Продавец" || role == "Покупатель")
                 {
                     result.Role = role;
                 }

@@ -11,7 +11,7 @@ namespace BotSupport.Dialogs
     {
         private string platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
         private string role; // Какова роль пользователя ("Заказчик", "Поставщик")
-        private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
+        //private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
         private bool parametrs; // Быстрая проверка наличия всех параметров
 
         public Task StartAsync(IDialogContext context)
@@ -27,13 +27,13 @@ namespace BotSupport.Dialogs
             {
                 platform = null;
                 role = null;
-                type = null;
+                //type = null;
                 parametrs = false;
             }
 
             if (parametrs == false)
             {
-                if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
+                if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role))// || string.IsNullOrEmpty(type)
                 {
                     if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
@@ -74,18 +74,18 @@ namespace BotSupport.Dialogs
                                 role = apiAiResponse.Role;
                             }
 
-                            // Проверка наличия, добавление или редактирование параметра "Тип"
-                            if (!string.IsNullOrEmpty(type))
-                            {
-                                if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
-                                {
-                                    type = apiAiResponse.Type;
-                                }
-                            }
-                            else
-                            {
-                                type = apiAiResponse.Type;
-                            }
+                            //// Проверка наличия, добавление или редактирование параметра "Тип"
+                            //if (!string.IsNullOrEmpty(type))
+                            //{
+                            //    if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
+                            //    {
+                            //        type = apiAiResponse.Type;
+                            //    }
+                            //}
+                            //else
+                            //{
+                            //    type = apiAiResponse.Type;
+                            //}
                         }
                     }
                     else
@@ -94,14 +94,32 @@ namespace BotSupport.Dialogs
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role) || string.IsNullOrEmpty(type))
+                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role))// || string.IsNullOrEmpty(type)
                     {
-                        await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
+                        //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
+                        string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
+
+                        if (string.IsNullOrEmpty(platform))
+                        {
+                            CardDialog.PlatformCard(context, activity, checkParametrs);
+                        }
+                        
+                        if (string.IsNullOrEmpty(role)&&!string.IsNullOrEmpty(platform))
+                        {
+                            if (platform == "Имущество")
+                            {
+                                CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                            }
+                            else
+                            {
+                                CardDialog.RoleCard(context, activity, checkParametrs);
+                            }
+                        }
                     }
                     else
                     {
                         parametrs = true;
-                        await context.PostAsync("Напишите теперь интересующую Вас тему.");
+                        await context.PostAsync("Напишите теперь интересующую Вас тему. Для возврата в исходное состояние наберите слово \"сброс\"");
                         activity.Text = null;
                     }
                 }
