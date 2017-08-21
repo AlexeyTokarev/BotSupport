@@ -20,7 +20,8 @@ namespace BotSupport.Dialogs
             var replyToConversation = activity.CreateReply();//(Activity)context.MakeMessage();
             replyToConversation.Attachments = new List<Attachment>();
 
-            var cardButton = new List<CardAction>();
+            var cardButton1 = new List<CardAction>();
+            var cardButton2 = new List<CardAction>();
             var card1 = new CardAction()
             {
                 Value = "223-ФЗ",
@@ -47,22 +48,27 @@ namespace BotSupport.Dialogs
                 Title = "РТС-Маркет"
             };
 
-            cardButton.Add(card1);
-            cardButton.Add(card2);
-            cardButton.Add(card3);
-            cardButton.Add(card4);
-            cardButton.Add(card5);
+            cardButton1.Add(card1);
+            cardButton1.Add(card2);
+            cardButton1.Add(card3);
+            cardButton2.Add(card4);
+            cardButton2.Add(card5);
 
-            var hero = new HeroCard()
+            var hero1 = new HeroCard()
             {
-                Buttons = cardButton,
+                Buttons = cardButton1,
                 Text = checkParametrs
             };
+            var hero2 = new HeroCard()
+            {
+                Buttons = cardButton2
+            };
+            var attach1 = hero1.ToAttachment();
+            var attach2 = hero2.ToAttachment();
+            //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
-            var attach = hero.ToAttachment();
-            if (attach == null) throw new ArgumentNullException(nameof(attach));
-
-            replyToConversation.Attachments.Add(attach);
+            replyToConversation.Attachments.Add(attach1);
+            replyToConversation.Attachments.Add(attach2);
             await context.PostAsync(replyToConversation);
         }
 
