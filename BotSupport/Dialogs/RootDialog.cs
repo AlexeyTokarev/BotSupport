@@ -23,12 +23,10 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
-            await context.PostAsync("Номер 1");
             try
             {
                 if (ResetParametrs.Reset(activity?.Text))
                 {
-                    await context.PostAsync("Номер 2"); 
                     platform = null;
                     role = null;
                     //type = null;
@@ -38,18 +36,15 @@ namespace BotSupport.Dialogs
             }
             catch (Exception ex)
             {
-                await context.PostAsync(ex.Message + "номер 1");
+                await context.PostAsync(ex.Message);
             }
 
             if (parametrs == false)
             {
-                await context.PostAsync("Номер 3");
                 if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
                 {
-                    await context.PostAsync("Номер 4");
                     if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
-                        await context.PostAsync("Номер 5");
                         var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
 
                         // Если есть ошибки
@@ -64,7 +59,6 @@ namespace BotSupport.Dialogs
                             // Проверка наличия, добавление или редактирование параметра "Площадка"
                             if (!string.IsNullOrEmpty(platform))
                             {
-                                await context.PostAsync("Номер 6");
                                 if ((platform != apiAiResponse.Platform) &&
                                     (!string.IsNullOrEmpty(apiAiResponse.Platform)))
                                 {
@@ -73,14 +67,12 @@ namespace BotSupport.Dialogs
                             }
                             else
                             {
-                                await context.PostAsync("Номер 7");
                                 platform = apiAiResponse.Platform;
                             }
 
                             // Проверка наличия, добавление или редактирование параметра "Роль"
                             if (!string.IsNullOrEmpty(role))
                             {
-                                await context.PostAsync("Номер 8");
                                 if ((role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
                                 {
                                     role = apiAiResponse.Role;
@@ -88,7 +80,6 @@ namespace BotSupport.Dialogs
                             }
                             else
                             {
-                                await context.PostAsync("Номер 9");
                                 role = apiAiResponse.Role;
                             }
 
@@ -114,7 +105,6 @@ namespace BotSupport.Dialogs
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
                     if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
                     {
-                        await context.PostAsync("Номер 10");
                         //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
                         string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
 
@@ -122,14 +112,12 @@ namespace BotSupport.Dialogs
                         {
                             try
                             {
-                                await context.PostAsync("Номер 11");
                                 CardDialog.PlatformCard(context, activity, checkParametrs);
-                                await context.PostAsync("Номер 11.1");
                                 return;
                             }
                             catch (Exception ex)
                             {
-                                await context.PostAsync(ex.Message + "номер 4");
+                                await context.PostAsync(ex.Message);
                             }
                         }
 
@@ -139,44 +127,38 @@ namespace BotSupport.Dialogs
                             {
                                 try
                                 {
-                                    await context.PostAsync("Номер 12");
                                     CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
-                                    await context.PostAsync("Номер 12.1");
                                     return;
                                 }
                                 catch (Exception ex)
                                 {
-                                    await context.PostAsync(ex.Message + "номер 2");
+                                    await context.PostAsync(ex.Message);
                                 }
                             }
                             else
                             {
                                 try
                                 {
-                                    await context.PostAsync("Номер 13");
                                     CardDialog.RoleCard(context, activity, checkParametrs);
                                     return;
                                 }
                                 catch (Exception ex)
                                 {
-                                    await context.PostAsync(ex.Message + "номер 3");
+                                    await context.PostAsync(ex.Message);
                                 }
                             }
                         }
                     }
                     else
                     {
-                        await context.PostAsync("Номер 14");
                         parametrs = true;
                         await context.PostAsync(
                             "Напишите теперь интересующую Вас тему. Для возврата в исходное состояние наберите слово \"сброс\"");
                         activity.Text = null;
-                        await context.PostAsync("Номер 15");
                     }
                 }
                 else
                 {
-                    await context.PostAsync("Номер 16");
                     parametrs = true;
                     await context.PostAsync("Напишите теперь интересующую Вас тему.");
                 }
