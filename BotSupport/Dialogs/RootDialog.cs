@@ -23,21 +23,21 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
-            try
-            {
-                if (ResetParametrs.Reset(activity?.Text))
-                {
-                    platform = null;
-                    role = null;
-                    //type = null;
-                    parametrs = false;
-                    context.Wait(MessageReceivedAsync);
-                }
-            }
-            catch (Exception ex)
-            {
-                await context.PostAsync(ex.Message + "номер 1");
-            }
+            //try
+            //{
+            //    if (ResetParametrs.Reset(activity?.Text))
+            //    {
+            //        platform = null;
+            //        role = null;
+            //        //type = null;
+            //        parametrs = false;
+            //        //context.Wait(MessageReceivedAsync);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    await context.PostAsync(ex.Message + "номер 1");
+            //}
 
             if (parametrs == false)
             {

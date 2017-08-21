@@ -63,7 +63,6 @@ namespace BotSupport.Dialogs
 
             replyToConversation.Attachments.Add(attach);
             await context.PostAsync(replyToConversation);
-            
         }
 
         /// <summary>
