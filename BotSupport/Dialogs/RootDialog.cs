@@ -124,6 +124,7 @@ namespace BotSupport.Dialogs
                             {
                                 await context.PostAsync("Номер 11");
                                 CardDialog.PlatformCard(context, activity, checkParametrs);
+                                await context.PostAsync("Номер 11.1");
                                 return;
                             }
                             catch (Exception ex)
@@ -140,6 +141,7 @@ namespace BotSupport.Dialogs
                                 {
                                     await context.PostAsync("Номер 12");
                                     CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                                    await context.PostAsync("Номер 12.1");
                                     return;
                                 }
                                 catch (Exception ex)
