@@ -62,7 +62,9 @@ namespace BotSupport.Dialogs
             //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
             replyToConversation.Attachments.Add(attach);
+            await context.PostAsync("Номер 17");
             await context.PostAsync(replyToConversation);
+            await context.PostAsync("Номер 18");
         }
 
         /// <summary>
