@@ -17,9 +17,11 @@ namespace BotSupport.Dialogs
         /// <param name="checkParametrs"></param>
         public static async void PlatformCard(IDialogContext context, Activity activity, string checkParametrs)
         {
-            var replyToConversation = activity.CreateReply();//(Activity)context.MakeMessage();
-            replyToConversation.Attachments = new List<Attachment>();
+            var replyToConversation1 = activity.CreateReply();//(Activity)context.MakeMessage();
+            replyToConversation1.Attachments = new List<Attachment>();
 
+            var replyToConversation2 = activity.CreateReply();//(Activity)context.MakeMessage();
+            replyToConversation2.Attachments = new List<Attachment>();
             var cardButton1 = new List<CardAction>();
             var cardButton2 = new List<CardAction>();
             var card1 = new CardAction()
@@ -67,9 +69,10 @@ namespace BotSupport.Dialogs
             var attach2 = hero2.ToAttachment();
             //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
-            replyToConversation.Attachments.Add(attach1);
-            replyToConversation.Attachments.Add(attach2);
-            await context.PostAsync(replyToConversation);
+            replyToConversation1.Attachments.Add(attach1);
+            replyToConversation2.Attachments.Add(attach2);
+            await context.PostAsync(replyToConversation1);
+            await context.PostAsync(replyToConversation2);
         }
 
         /// <summary>
