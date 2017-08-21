@@ -17,13 +17,10 @@ namespace BotSupport.Dialogs
         /// <param name="checkParametrs"></param>
         public static async void PlatformCard(IDialogContext context, Activity activity, string checkParametrs)
         {
-            var replyToConversation1 = activity.CreateReply();//(Activity)context.MakeMessage();
-            replyToConversation1.Attachments = new List<Attachment>();
-
-            var replyToConversation2 = activity.CreateReply();//(Activity)context.MakeMessage();
-            replyToConversation2.Attachments = new List<Attachment>();
-            var cardButton1 = new List<CardAction>();
-            var cardButton2 = new List<CardAction>();
+            var replyToConversation = activity.CreateReply();//(Activity)context.MakeMessage();
+            replyToConversation.Attachments = new List<Attachment>();
+            
+            var cardButton = new List<CardAction>();
             var card1 = new CardAction()
             {
                 Value = "223-ФЗ",
@@ -50,29 +47,23 @@ namespace BotSupport.Dialogs
                 Title = "РТС-Маркет"
             };
 
-            cardButton1.Add(card1);
-            cardButton1.Add(card2);
-            cardButton1.Add(card3);
-            cardButton2.Add(card4);
-            cardButton2.Add(card5);
+            cardButton.Add(card1);
+            cardButton.Add(card2);
+            cardButton.Add(card3);
+            cardButton.Add(card4);
+            cardButton.Add(card5);
 
-            var hero1 = new HeroCard()
+            var hero = new HeroCard()
             {
-                Buttons = cardButton1,
+                Buttons = cardButton,
                 Text = checkParametrs
             };
-            var hero2 = new HeroCard()
-            {
-                Buttons = cardButton2
-            };
-            var attach1 = hero1.ToAttachment();
-            var attach2 = hero2.ToAttachment();
+            var attach = hero.ToAttachment();
             //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
-            replyToConversation1.Attachments.Add(attach1);
-            replyToConversation2.Attachments.Add(attach2);
-            await context.PostAsync(replyToConversation1);
-            await context.PostAsync(replyToConversation2);
+            replyToConversation.Attachments.Add(attach);
+            await context.PostAsync(replyToConversation);
+            
         }
 
         /// <summary>
