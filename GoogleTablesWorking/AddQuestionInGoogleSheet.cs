@@ -24,16 +24,24 @@ namespace GoogleTablesWorking
 
         public static string SendError(string platform, string role, string userQuestion, string answer)
         {
-            Data[0] = platform;
-            Data[1] = role;
-            Data[2] = userQuestion;
-            Data[3] = answer;
-            Data[4] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
+            try
+            {
+                Data[0] = platform;
+                Data[1] = role;
+                Data[2] = userQuestion;
+                Data[3] = answer;
+                Data[4] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
 
-            var credential = GetSheetCredentials();
-            var service = GetService(credential);
-            FillSpreadsheet(service, SpreadsheetId, Data);
-            return "Спасибо большое. Ваше мнение очень важно для нас. В ближайшее время наша служба техподдержки рассмотрит Ваш ответ. Приносим извинения за неудобство.";
+                var credential = GetSheetCredentials();
+                var service = GetService(credential);
+                FillSpreadsheet(service, SpreadsheetId, Data);
+                return
+                    "Спасибо большое. Ваше мнение очень важно для нас. В ближайшее время наша служба техподдержки рассмотрит Ваш ответ. Приносим извинения за неудобство.";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + ex.StackTrace;
+            }
         }
 
         private static UserCredential GetSheetCredentials()
