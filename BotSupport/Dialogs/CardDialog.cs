@@ -80,7 +80,7 @@ namespace BotSupport.Dialogs
         /// <param name="context"></param>
         /// <param name="activity"></param>
         /// <param name="checkParametrs"></param>
-        public static async void RoleCard(IDialogContext context, Activity activity, string checkParametrs)
+        public static void RoleCard(IDialogContext context, Activity activity, string checkParametrs)
         {
             var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
             replyToConversation.Attachments = new List<Attachment>();
@@ -109,7 +109,7 @@ namespace BotSupport.Dialogs
             if (attach == null) throw new ArgumentNullException(nameof(attach));
 
             replyToConversation.Attachments.Add(attach);
-            await context.PostAsync(replyToConversation);
+            context.PostAsync(replyToConversation);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace BotSupport.Dialogs
         /// <param name="context"></param>
         /// <param name="activity"></param>
         /// <param name="checkParametrs"></param>
-        public static async void RoleCardImuchestvo(IDialogContext context, Activity activity, string checkParametrs)
+        public static void RoleCardImuchestvo(IDialogContext context, Activity activity, string checkParametrs)
         {
             var replyToConversation = activity.CreateReply();
             replyToConversation.Attachments = new List<Attachment>();
@@ -147,10 +147,10 @@ namespace BotSupport.Dialogs
             if (attach == null) throw new ArgumentNullException(nameof(attach));
 
             replyToConversation.Attachments.Add(attach);
-            await context.PostAsync(replyToConversation);
+            context.PostAsync(replyToConversation);
         }
 
-        public static async void SatisfyingAnswer(IDialogContext context, Activity activity)
+        public static void SatisfyingAnswer(IDialogContext context, Activity activity)
         {
             var replyToConversation = activity.CreateReply();
             replyToConversation.Attachments = new List<Attachment>();
@@ -179,7 +179,7 @@ namespace BotSupport.Dialogs
             if (attach == null) throw new ArgumentNullException(nameof(attach));
 
             replyToConversation.Attachments.Add(attach);
-            await context.PostAsync(replyToConversation);
+            context.PostAsync(replyToConversation);
         }
     }
 }
