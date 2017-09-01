@@ -149,5 +149,37 @@ namespace BotSupport.Dialogs
             replyToConversation.Attachments.Add(attach);
             await context.PostAsync(replyToConversation);
         }
+
+        public static async void SatisfyingAnswer(IDialogContext context, Activity activity)
+        {
+            var replyToConversation = activity.CreateReply();
+            replyToConversation.Attachments = new List<Attachment>();
+
+            var cardButton = new List<CardAction>();
+            var card1 = new CardAction()
+            {
+                Value = "Да",
+                Title = "Да"
+            };
+            var card2 = new CardAction()
+            {
+                Value = "Нет",
+                Title = "Нет"
+            };
+            cardButton.Add(card1);
+            cardButton.Add(card2);
+
+            var hero = new HeroCard()
+            {
+                Buttons = cardButton,
+                Text = "Удовлетворил ли Вас ответ?"
+            };
+
+            var attach = hero.ToAttachment();
+            if (attach == null) throw new ArgumentNullException(nameof(attach));
+
+            replyToConversation.Attachments.Add(attach);
+            await context.PostAsync(replyToConversation);
+        }
     }
 }

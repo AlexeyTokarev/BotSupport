@@ -2,17 +2,23 @@
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using GoogleTablesWorking;
+using System.Threading;
 
 namespace BotSupport.Dialogs
 {
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        private string platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
-        private string role; // Какова роль пользователя ("Заказчик", "Поставщик")
+        private string _platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
+        private string _role; // Какова роль пользователя ("Заказчик", "Поставщик")
         //private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
-        private bool parametrs; // Быстрая проверка наличия всех параметров
+        private bool _parametrs; // Быстрая проверка наличия всех параметров
+        private bool _answerExistence; // Проверка наличия ответов 
+        private string _userQuestion;
+        private string _answer;
 
         public Task StartAsync(IDialogContext context)
         {
@@ -23,14 +29,52 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+
+            if (_answerExistence)
+            {
+                if (activity.Text.ToLower() != "да" && activity.Text.ToLower() != "нет")
+                {
+                    await context.PostAsync("Ответьте, пожалуйста, на вопрос. Нам очень важно Ваше мнение.");
+                    Thread.Sleep(1500);
+                    CardDialog.SatisfyingAnswer(context, activity);
+                    return;
+                }
+                else
+                {
+                    if (activity.Text.ToLower() == "да")
+                    {
+                        await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
+                        _userQuestion = null;
+                        _answer = null;
+                        _answerExistence = false;
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+                        return;
+                    }
+                    if (activity.Text.ToLower() == "нет")
+                    {
+                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается...");
+                        var excuseAnswer = AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
+                        await context.PostAsync(excuseAnswer);
+                        _answer = null;
+                        _userQuestion = null;
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+                        _answerExistence = false;
+                        return;
+                    }
+                }
+            }
+
+
             try
             {
                 if (ResetParametrs.Reset(activity?.Text))
                 {
-                    platform = null;
-                    role = null;
+                    _platform = null;
+                    _role = null;
                     //type = null;
-                    parametrs = false;
+                    _parametrs = false;
                     //context.Wait(MessageReceivedAsync);
                 }
             }
@@ -39,9 +83,9 @@ namespace BotSupport.Dialogs
                 await context.PostAsync(ex.Message);
             }
 
-            if (parametrs == false)
+            if (_parametrs == false)
             {
-                if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
+                if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) // || string.IsNullOrEmpty(type)
                 {
                     if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
@@ -57,30 +101,30 @@ namespace BotSupport.Dialogs
                         else
                         {
                             // Проверка наличия, добавление или редактирование параметра "Площадка"
-                            if (!string.IsNullOrEmpty(platform))
+                            if (!string.IsNullOrEmpty(_platform))
                             {
-                                if ((platform != apiAiResponse.Platform) &&
+                                if ((_platform != apiAiResponse.Platform) &&
                                     (!string.IsNullOrEmpty(apiAiResponse.Platform)))
                                 {
-                                    platform = apiAiResponse.Platform;
+                                    _platform = apiAiResponse.Platform;
                                 }
                             }
                             else
                             {
-                                platform = apiAiResponse.Platform;
+                                _platform = apiAiResponse.Platform;
                             }
 
                             // Проверка наличия, добавление или редактирование параметра "Роль"
-                            if (!string.IsNullOrEmpty(role))
+                            if (!string.IsNullOrEmpty(_role))
                             {
-                                if ((role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
+                                if ((_role != apiAiResponse.Role) && (!string.IsNullOrEmpty(apiAiResponse.Role)))
                                 {
-                                    role = apiAiResponse.Role;
+                                    _role = apiAiResponse.Role;
                                 }
                             }
                             else
                             {
-                                role = apiAiResponse.Role;
+                                _role = apiAiResponse.Role;
                             }
 
                             //// Проверка наличия, добавление или редактирование параметра "Тип"
@@ -103,12 +147,12 @@ namespace BotSupport.Dialogs
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(platform) || string.IsNullOrEmpty(role)) // || string.IsNullOrEmpty(type)
+                    if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) // || string.IsNullOrEmpty(type)
                     {
                         //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
-                        string checkParametrs = ParametrsDialog.CheckParametrs(platform, role);
+                        string checkParametrs = ParametrsDialog.CheckParametrs(_platform, _role);
 
-                        if (string.IsNullOrEmpty(platform))
+                        if (string.IsNullOrEmpty(_platform))
                         {
                             try
                             {
@@ -123,9 +167,9 @@ namespace BotSupport.Dialogs
                             }
                         }
 
-                        if (string.IsNullOrEmpty(role) && !string.IsNullOrEmpty(platform))
+                        if (string.IsNullOrEmpty(_role) && !string.IsNullOrEmpty(_platform))
                         {
-                            if (platform == "Имущество")
+                            if (_platform == "Имущество")
                             {
                                 try
                                 {
@@ -153,7 +197,7 @@ namespace BotSupport.Dialogs
                     }
                     else
                     {
-                        parametrs = true;
+                        _parametrs = true;
                         await context.PostAsync(
                             "Напишите теперь интересующую Вас тему. Для возврата в исходное состояние наберите слово \"сброс\"");
                         activity.Text = null;
@@ -161,40 +205,52 @@ namespace BotSupport.Dialogs
                 }
                 else
                 {
-                    parametrs = true;
+                    _parametrs = true;
                     await context.PostAsync("Напишите теперь интересующую Вас тему.");
                 }
             }
 
-            if (!string.IsNullOrEmpty(activity?.Text) && parametrs == true)
+            if (!string.IsNullOrEmpty(activity?.Text) && _parametrs)
             {
-                var answer = new QnADialog().QnABotResponse(platform, activity.Text);
+                _userQuestion = activity.Text;
+                _answer = new QnADialog().QnABotResponse(_platform, _userQuestion);
+
+                if (_answer == "Прошу прощения, но я не понял вопроса. Попробуйте перефразировать его.")
+                {
+                    await context.PostAsync(_answer);
+                    _answerExistence = false;
+                    return;
+                }
 
                 // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
-                if (answer.Length > 3500)
+                if (_answer.Length > 3500)
                 {
-                    while (answer.Length > 3500)
+                    while (_answer.Length > 3500)
                     {
                         var substringPoint = 3500;
 
                         // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
                         // Причем разделение проводится по предложениям (Ориентиром является точка)
-                        while (answer[substringPoint] != '.')
+                        while (_answer[substringPoint] != '.')
                         {
                             substringPoint--;
                         }
 
-                        var subanswer = answer.Substring(0, substringPoint + 1);
+                        var subanswer = _answer.Substring(0, substringPoint + 1);
 
                         await context.PostAsync(subanswer);
-                        answer = answer.Remove(0, substringPoint + 1);
+                        _answer = _answer.Remove(0, substringPoint + 1);
                     }
-                    await context.PostAsync(answer);
+                    await context.PostAsync(_answer);
+                    _answerExistence = true;
                 }
                 else
                 {
-                    await context.PostAsync(answer);
+                    await context.PostAsync(_answer);
+                    _answerExistence = true;
                 }
+                Thread.Sleep(1500);
+                CardDialog.SatisfyingAnswer(context, activity);
             }
             //context.Wait(MessageReceivedAsync);
         }

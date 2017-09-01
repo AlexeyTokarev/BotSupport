@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotSupport", "BotSupport\BotSupport.csproj", "{4292F16F-294C-451A-892F-2A0F1EA1636A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QnA", "QnA\QnA.csproj", "{46D310C4-4414-465A-A4A7-0BD271E815F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAi", "ApiAi\ApiAi.csproj", "{84DF3597-F73B-479F-9F95-0903525A5EE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleTablesWorking", "GoogleTablesWorking\GoogleTablesWorking.csproj", "{17F462F1-D22E-46E3-921E-03F4242D3EAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{84DF3597-F73B-479F-9F95-0903525A5EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84DF3597-F73B-479F-9F95-0903525A5EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84DF3597-F73B-479F-9F95-0903525A5EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F462F1-D22E-46E3-921E-03F4242D3EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F462F1-D22E-46E3-921E-03F4242D3EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F462F1-D22E-46E3-921E-03F4242D3EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F462F1-D22E-46E3-921E-03F4242D3EAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A7E590E-035E-4569-B0F3-29F9D60E66BC}
 	EndGlobalSection
 EndGlobal
