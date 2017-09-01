@@ -46,6 +46,11 @@ namespace GoogleTablesWorking
 
         private static UserCredential GetSheetCredentials()
         {
+            if (!File.Exists(ClientSecret))
+            {
+                throw new Exception("Такого файла не существует. " + ClientSecret);
+
+            }
             using (var srteam = new FileStream(ClientSecret, FileMode.Open, FileAccess.Read))
             {
                 var creadPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "sheetsCreds.json");
