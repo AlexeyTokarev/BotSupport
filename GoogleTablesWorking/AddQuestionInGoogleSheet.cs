@@ -49,7 +49,6 @@ namespace GoogleTablesWorking
             if (!File.Exists(ClientSecret))
             {
                 throw new Exception("Такого файла не существует. " + ClientSecret);
-
             }
             using (var srteam = new FileStream(ClientSecret, FileMode.Open, FileAccess.Read))
             {
