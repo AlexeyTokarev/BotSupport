@@ -53,7 +53,7 @@ namespace BotSupport.Dialogs
                     }
                     if (activity.Text.ToLower() == "нет")
                     {
-                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается1");
+                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается2");
                         var excuseAnswer = AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
                         await context.PostAsync(excuseAnswer);
                         _answer = null;
