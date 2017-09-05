@@ -4,7 +4,6 @@ using Microsoft.Bot.Connector;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using GoogleTablesWorking;
 using System.Threading;
 
 namespace BotSupport.Dialogs
@@ -53,8 +52,8 @@ namespace BotSupport.Dialogs
                     }
                     if (activity.Text.ToLower() == "нет")
                     {
-                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается3");
-                        var excuseAnswer = AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
+                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                        var excuseAnswer = " Приносим свои извинения за неудобства";// AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
                         await context.PostAsync(excuseAnswer);
                         _answer = null;
                         _userQuestion = null;

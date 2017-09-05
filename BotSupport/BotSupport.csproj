@@ -159,9 +159,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="App_Data\client_secret.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -174,16 +171,14 @@
       <Project>{84df3597-f73b-479f-9f95-0903525a5ee0}</Project>
       <Name>ApiAi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GoogleTablesWorking\GoogleTablesWorking.csproj">
-      <Project>{17f462f1-d22e-46e3-921e-03f4242d3ead}</Project>
-      <Name>GoogleTablesWorking</Name>
-    </ProjectReference>
     <ProjectReference Include="..\QnA\QnA.csproj">
       <Project>{46d310c4-4414-465a-a4a7-0bd271e815f6}</Project>
       <Name>QnA</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
