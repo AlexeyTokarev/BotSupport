@@ -27,7 +27,7 @@ namespace GoogleTablesWorking
 
             String serviceAccountEmail = "tessheet3@curious-domain-178413.iam.gserviceaccount.com";
 
-            var certificate = new X509Certificate2(KeyDirectory, "notasecret", X509KeyStorageFlags.MachineKeySet & X509KeyStorageFlags.Exportable);
+            var certificate = new X509Certificate2(KeyDirectory, "notasecret", X509KeyStorageFlags.Exportable);
 
             ServiceAccountCredential credential = new ServiceAccountCredential(
                 new ServiceAccountCredential.Initializer(serviceAccountEmail)
