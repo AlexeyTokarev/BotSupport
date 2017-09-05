@@ -15,11 +15,14 @@ namespace GoogleTablesWorking
     {
         private static readonly string KeyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "key.p12");
         private static readonly string AppName = "TestTable";
-        private static readonly string SpreadsheetId = "1B_qS-3HzAZ4zTQkrCjgVHBXzo_D89DcX_TWmVILahCw";
+        private static string SpreadsheetId;
         private static string[] Data = new string[5];
 
-        public static void SendError(string platform, string role, string userQuestion, string answer)
+        public static void SendError(string platform, string role, string userQuestion, string answer, bool correct)
         {
+            if (!correct) SpreadsheetId = "1B_qS-3HzAZ4zTQkrCjgVHBXzo_D89DcX_TWmVILahCw";
+            if (correct) SpreadsheetId = "10MCeGzO9D5bjtkwvH5R0oeDA0hxJj2AlXggbUqlNYuE";
+
             Data[0] = platform;
             Data[1] = role;
             Data[2] = userQuestion;
@@ -35,6 +38,7 @@ namespace GoogleTablesWorking
 
             var rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xml);
+
             ServiceAccountCredential credential = new ServiceAccountCredential(
                 new ServiceAccountCredential.Initializer(serviceAccountEmail)
                 {
@@ -88,7 +92,6 @@ namespace GoogleTablesWorking
                     },
                     Fields = "userEnteredValue"
                 }
-
             });
 
 
@@ -96,6 +99,7 @@ namespace GoogleTablesWorking
             {
                 Requests = requests
             };
+
             service.Spreadsheets.BatchUpdate(busr, spreadsheetId).Execute();
         }
 
@@ -123,8 +127,10 @@ namespace GoogleTablesWorking
                 request.DateTimeRenderOption = dateTimeRenderOption;
 
                 ValueRange response = request.Execute();
+
                 var jsonobj = JsonConvert.SerializeObject(response);
                 dynamic obj = JsonConvert.DeserializeObject(jsonobj);
+
                 var values = obj.values;
 
                 if (values != null)
@@ -135,6 +141,7 @@ namespace GoogleTablesWorking
 
                 emptyRow = true;
             }
+
             return rowNumber - 1;
         }
     }

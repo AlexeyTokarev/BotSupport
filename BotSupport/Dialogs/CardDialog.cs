@@ -19,7 +19,7 @@ namespace BotSupport.Dialogs
         {
             try
             {
-                var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
+                var replyToConversation = activity.CreateReply();
                 replyToConversation.Attachments = new List<Attachment>();
 
                 var cardButton = new List<CardAction>();
@@ -61,15 +61,12 @@ namespace BotSupport.Dialogs
                     Text = checkParametrs
                 };
                 var attach = hero.ToAttachment();
-                //if (attach == null) throw new ArgumentNullException(nameof(attach));
 
                 replyToConversation.Attachments.Add(attach);
                 context.PostAsync(replyToConversation);
-               // context.PostAsync("4");
             }
             catch (Exception e)
             {
-                //context.PostAsync("3");
                 context.PostAsync(e.Message + " Error code 1.");
             }
         }
@@ -82,7 +79,7 @@ namespace BotSupport.Dialogs
         /// <param name="checkParametrs"></param>
         public static void RoleCard(IDialogContext context, Activity activity, string checkParametrs)
         {
-            var replyToConversation = activity.CreateReply(); //(Activity)context.MakeMessage();
+            var replyToConversation = activity.CreateReply();
             replyToConversation.Attachments = new List<Attachment>();
 
             var cardButton = new List<CardAction>();

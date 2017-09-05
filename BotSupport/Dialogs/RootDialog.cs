@@ -12,13 +12,13 @@ namespace BotSupport.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        private string _platform; //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
-        private string _role; // Какова роль пользователя ("Заказчик", "Поставщик")
-        //private string type; // Кем является пользователь ("ИП", "ФЛ", "ЮЛ")
-        private bool _parametrs; // Быстрая проверка наличия всех параметров
-        private bool _answerExistence; // Проверка наличия ответов 
-        private string _userQuestion;
-        private string _answer;
+        private string _platform;       //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
+        private string _role;           // Какова роль пользователя ("Заказчик", "Поставщик")
+        private bool _parametrs;        // Быстрая проверка наличия всех параметров
+        private bool _answerExistence;  // Проверка наличия ответов 
+        private string _userQuestion;   // Вопрос пользователя
+        private string _answer;         // Ответ пользователя
+        private bool _correct;          // Проверка корректности выданного ответа
 
         public Task StartAsync(IDialogContext context)
         {
@@ -43,10 +43,21 @@ namespace BotSupport.Dialogs
                 {
                     if (activity.Text.ToLower() == "да")
                     {
+                        _correct = true;
+                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                        try
+                        {
+                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
+                        }
+                        catch (Exception ex)
+                        {
+                            await context.PostAsync(ex.Message);
+                        }
                         await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
                         _userQuestion = null;
                         _answer = null;
                         _answerExistence = false;
+                        _correct = false;
                         Thread.Sleep(1500);
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
                         return;
@@ -56,7 +67,7 @@ namespace BotSupport.Dialogs
                         await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
                         try
                         {
-                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
+                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
                         }
                         catch (Exception ex)
                         {
@@ -73,17 +84,14 @@ namespace BotSupport.Dialogs
                     }
                 }
             }
-
-
+            
             try
             {
                 if (ResetParametrs.Reset(activity?.Text))
                 {
                     _platform = null;
                     _role = null;
-                    //type = null;
                     _parametrs = false;
-                    //context.Wait(MessageReceivedAsync);
                 }
             }
             catch (Exception ex)
@@ -93,7 +101,7 @@ namespace BotSupport.Dialogs
 
             if (_parametrs == false)
             {
-                if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) // || string.IsNullOrEmpty(type)
+                if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role))
                 {
                     if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
@@ -155,22 +163,18 @@ namespace BotSupport.Dialogs
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) // || string.IsNullOrEmpty(type)
+                    if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) 
                     {
-                        //await context.PostAsync(ParametrsDialog.CheckParametrs(platform, role, type));
                         string checkParametrs = ParametrsDialog.CheckParametrs(_platform, _role);
 
                         if (string.IsNullOrEmpty(_platform))
                         {
                             try
                             {
-                                //await context.PostAsync("1");
                                 CardDialog.PlatformCard(context, activity, checkParametrs);
-                                //await context.PostAsync("5");
                             }
                             catch (Exception ex)
                             {
-                                //await context.PostAsync("2");
                                 await context.PostAsync(ex.Message);
                             }
                         }
@@ -233,23 +237,25 @@ namespace BotSupport.Dialogs
                 // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
                 if (_answer.Length > 3500)
                 {
-                    while (_answer.Length > 3500)
+                    // Создание копии ответа, для корректного занесения в таблицу ответов 
+                    string copyAnswer = _answer;
+                    while (copyAnswer.Length > 3500)
                     {
                         var substringPoint = 3500;
 
                         // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
                         // Причем разделение проводится по предложениям (Ориентиром является точка)
-                        while (_answer[substringPoint] != '.')
+                        while (copyAnswer[substringPoint] != '.')
                         {
                             substringPoint--;
                         }
 
-                        var subanswer = _answer.Substring(0, substringPoint + 1);
+                        var subanswer = copyAnswer.Substring(0, substringPoint + 1);
 
                         await context.PostAsync(subanswer);
-                        _answer = _answer.Remove(0, substringPoint + 1);
+                        copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
                     }
-                    await context.PostAsync(_answer);
+                    await context.PostAsync(copyAnswer);
                     _answerExistence = true;
                 }
                 else
