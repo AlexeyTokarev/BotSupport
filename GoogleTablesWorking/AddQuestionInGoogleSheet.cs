@@ -29,9 +29,8 @@ namespace GoogleTablesWorking
             String serviceAccountEmail = "tessheet3@curious-domain-178413.iam.gserviceaccount.com";
 
             var certificate = new X509Certificate2(KeyDirectory, "notasecret",
-                X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);// | X509KeyStorageFlags.PersistKeySet);
+                X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet);
 
-            //--------------------------------------------------------------------------------------------------
             var xml = certificate.PrivateKey.ToXmlString(true);
 
             var rsa = new RSACryptoServiceProvider();
@@ -39,16 +38,9 @@ namespace GoogleTablesWorking
             ServiceAccountCredential credential = new ServiceAccountCredential(
                 new ServiceAccountCredential.Initializer(serviceAccountEmail)
                 {
-                    Scopes = new[] { SheetsService.Scope.Spreadsheets},
+                    Scopes = new[] { SheetsService.Scope.Spreadsheets },
                     Key = rsa
                 });
-
-            //------------------------------------------------------------------------------------------------
-            //ServiceAccountCredential credential = new ServiceAccountCredential(
-            //    new ServiceAccountCredential.Initializer(serviceAccountEmail)
-            //    {
-            //        Scopes = new[] { SheetsService.Scope.Spreadsheets }
-            //    }.FromCertificate(certificate));
 
             // Create the service.
             var service = new SheetsService(new BaseClientService.Initializer()
