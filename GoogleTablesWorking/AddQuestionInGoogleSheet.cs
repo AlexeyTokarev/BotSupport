@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace GoogleTablesWorking
@@ -29,11 +30,24 @@ namespace GoogleTablesWorking
 
             var certificate = new X509Certificate2(KeyDirectory, "notasecret", X509KeyStorageFlags.Exportable);
 
+            //--------------------------------------------------------------------------------------------------
+            var xml = certificate.PrivateKey.ToXmlString(true);
+
+            var rsa = new RSACryptoServiceProvider();
+            rsa.FromXmlString(xml);
             ServiceAccountCredential credential = new ServiceAccountCredential(
                 new ServiceAccountCredential.Initializer(serviceAccountEmail)
                 {
-                    Scopes = new[] { SheetsService.Scope.Spreadsheets }
-                }.FromCertificate(certificate));
+                    Scopes = new[] { SheetsService.Scope.Spreadsheets},
+                    Key = rsa
+                });
+
+            //------------------------------------------------------------------------------------------------
+            //ServiceAccountCredential credential = new ServiceAccountCredential(
+            //    new ServiceAccountCredential.Initializer(serviceAccountEmail)
+            //    {
+            //        Scopes = new[] { SheetsService.Scope.Spreadsheets }
+            //    }.FromCertificate(certificate));
 
             // Create the service.
             var service = new SheetsService(new BaseClientService.Initializer()
