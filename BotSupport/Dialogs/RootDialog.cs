@@ -54,7 +54,14 @@ namespace BotSupport.Dialogs
                     if (activity.Text.ToLower() == "нет")
                     {
                         await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
-                        AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
+                        try
+                        {
+                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer);
+                        }
+                        catch (Exception ex)
+                        {
+                            await context.PostAsync(ex.Message);
+                        }
                         await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
 
                         _answer = null;
