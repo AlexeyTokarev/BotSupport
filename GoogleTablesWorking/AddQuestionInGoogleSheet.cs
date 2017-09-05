@@ -1,70 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading;
-using Google.Apis.Auth.OAuth2;
+﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
-using Google.Apis.Util.Store;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GoogleTablesWorking
 {
     public class AddQuestionInGoogleSheet
     {
-        private static readonly string ClientSecret = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "client_secret.json");
-        private static readonly string[] ScopesSheets = { SheetsService.Scope.Spreadsheets };
-        private const string AppName = "TestTable";
-        private const string SpreadsheetId = "1B_qS-3HzAZ4zTQkrCjgVHBXzo_D89DcX_TWmVILahCw";
-
+        private static readonly string KeyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "key.p12");
+        private static readonly string AppName = "TestTable";
+        private static readonly string SpreadsheetId = "1B_qS-3HzAZ4zTQkrCjgVHBXzo_D89DcX_TWmVILahCw";
         private static string[] Data = new string[5];
 
-
-        public static string SendError(string platform, string role, string userQuestion, string answer)
+        public static void SendError(string platform, string role, string userQuestion, string answer)
         {
-            try
-            {
-                Data[0] = platform;
-                Data[1] = role;
-                Data[2] = userQuestion;
-                Data[3] = answer;
-                Data[4] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
+            Data[0] = platform;
+            Data[1] = role;
+            Data[2] = userQuestion;
+            Data[3] = answer;
+            Data[4] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
 
-                var credential = GetSheetCredentials();
-                var service = GetService(credential);
-                FillSpreadsheet(service, SpreadsheetId, Data);
-                return
-                    "Спасибо большое. Ваше мнение очень важно для нас. В ближайшее время наша служба техподдержки рассмотрит Ваш ответ. Приносим извинения за неудобство.";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message + ex.StackTrace;
-            }
-        }
+            String serviceAccountEmail = "tessheet3@curious-domain-178413.iam.gserviceaccount.com";
 
-        private static UserCredential GetSheetCredentials()
-        {
-            if (!File.Exists(ClientSecret))
-            {
-                throw new Exception("Такого файла не существует. " + ClientSecret);
-            }
-            using (var srteam = new FileStream(ClientSecret, FileMode.Open, FileAccess.Read))
-            {
-                var creadPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "sheetsCreds.json");
-                return GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(srteam).Secrets,
-                    ScopesSheets, "user", CancellationToken.None, new FileDataStore(creadPath, true)).Result;
-            }
-        }
+            var certificate = new X509Certificate2(KeyDirectory, "notasecret", X509KeyStorageFlags.Exportable);
 
-        private static SheetsService GetService(UserCredential credential)
-        {
-            return new SheetsService(new BaseClientService.Initializer
+            ServiceAccountCredential credential = new ServiceAccountCredential(
+                new ServiceAccountCredential.Initializer(serviceAccountEmail)
+                {
+                    Scopes = new[] { SheetsService.Scope.Spreadsheets }
+                }.FromCertificate(certificate));
+
+            // Create the service.
+            var service = new SheetsService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
-                ApplicationName = AppName
+                ApplicationName = AppName,
             });
+
+            FillSpreadsheet(service, SpreadsheetId, Data);
         }
 
         /// <summary>
@@ -130,7 +108,7 @@ namespace GoogleTablesWorking
 
             while (emptyRow == false)
             {
-                string range = $"A{rowNumber}:E{rowNumber}";
+                string range = $"A{rowNumber}:D{rowNumber}";
 
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     service.Spreadsheets.Values.Get(spreadsheetId, range);
