@@ -24,7 +24,11 @@ namespace BotSupport.Dialogs
                 "обновить",
                 "привет",
                 "здравствуйте",
-                "сбросить"
+                "сбросить",
+                "пока",
+                "до свидания",
+                "досвидания",
+                "всего доброго"
             };
 
             return resetPhrases.Contains(query.ToLower());

@@ -27,7 +27,7 @@ namespace GoogleTablesWorking
             Data[1] = role;
             Data[2] = userQuestion;
             Data[3] = answer;
-            Data[4] = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
+            Data[4] = ShowMoskowTime();
 
             String serviceAccountEmail = "tessheet3@curious-domain-178413.iam.gserviceaccount.com";
 
@@ -143,6 +143,14 @@ namespace GoogleTablesWorking
             }
 
             return rowNumber - 1;
+        }
+
+        private static string ShowMoskowTime()
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+            string moskowDate = dateTime.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
+            return moskowDate;
         }
     }
 }
