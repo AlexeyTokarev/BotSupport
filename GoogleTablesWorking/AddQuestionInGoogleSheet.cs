@@ -149,7 +149,7 @@ namespace GoogleTablesWorking
         {
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
-            string moskowDate = dateTime.ToString("dd-MM-yyyy HH:mm:ss (UTC zzz)");
+            string moskowDate = dateTime.ToString("dd-MM-yyyy HH:mm:ss");
             return moskowDate;
         }
     }
