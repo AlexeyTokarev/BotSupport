@@ -16,51 +16,117 @@ namespace BotSupport.Dialogs
         /// Данный метод назначает необходимые ключи для работы с ботом QnA Maker
         /// </summary>
         /// <param name="platform"></param>
-        public void QnAMakerKey(string platform)
+        /// <param name="role"></param>
+        public void QnAMakerKey(string platform, string role)
         {
             switch (platform)
             {
                 case "223-ФЗ":
                     {
-                        knowledgebaseId = "da1322df-d05f-4abc-9167-251e07720d65";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                        //Первоначальный вариант базы знаний
+                        switch (role)
+                        {
+                            case "Заказчик":
+                                {
+                                    knowledgebaseId = "f00b1d47-a513-47d4-81f4-2d1cd66d6031";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                            case "Поставщик":
+                                {
+                                    knowledgebaseId = "8083e3fd-0224-4114-801d-3ff9605baf8d";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                        }
+                        //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "da50c6c1-0e1f-467f-b94a-f82c0b0e1ac7";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
                 case "44-ФЗ":
                     {
-                        knowledgebaseId = "354c29e4-105e-445a-821a-95d5e1cd01a4";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                        //Первоначальный вариант базы знаний
+                        switch (role)
+                        {
+                            case "Заказчик":
+                                {
+                                    knowledgebaseId = "a77093cc-0654-403e-9e71-2104a2735c10";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                            case "Поставщик":
+                                {
+                                    knowledgebaseId = "f8a08e80-e7e3-43a6-a2a8-a7689d216db2";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                        }
+                        //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "254ec291-e15d-45d0-99c5-15593f38599c";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
                 case "615-ФЗ":
                     {
-                        knowledgebaseId = "993b8e64-67af-43df-9803-d28b321b568c";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                        //Первоначальный вариант базы знаний
+                        switch (role)
+                        {
+                            case "Заказчик":
+                                {
+                                    knowledgebaseId = "0873ecf7-0944-4a19-9149-c642211ece14";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                            case "Поставщик":
+                                {
+                                    knowledgebaseId = "a31cc3c4-1550-4594-bbe5-9f8dd7500a34";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                        }
+                        //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "71728f39-34d9-4dbb-bfbe-85d8fb2dfa96";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
                 case "Имущество":
                     {
-                        knowledgebaseId = "a9c5d4c3-7fdd-4b40-8d22-f461b4ccce79";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                        //Первоначальный вариант базы знаний
+                        switch (role)
+                        {
+                            case "Продавец":
+                                {
+                                    knowledgebaseId = "cba6012c-eb4f-4626-9bca-34b5d9ed22bb";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                            case "Покупатель":
+                                {
+                                    knowledgebaseId = "371b93b7-bb15-46bb-96bc-305cb3bea947";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                        }
+                        //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "89b2fccf-f3bc-4021-8ab1-0496865a8ba2";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
                 case "РТС-Маркет":
                     {
-                        knowledgebaseId = "3d6e4726-4355-4d7d-a231-43730b3b7231";
-                        qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
-                        //Первоначальный вариант базы знаний
+                        switch (role)
+                        {
+                            case "Заказчик":
+                                {
+                                    knowledgebaseId = "189b6314-63ab-415d-ba15-bdba7cf5c81d";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                            case "Поставщик":
+                                {
+                                    knowledgebaseId = "04accdfe-85f1-45f5-898d-dca8a30b2683";
+                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    break;
+                                }
+                        }
+                        //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "49bb744a-b569-43a1-a905-f9bdcdbc6aa4";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
@@ -72,11 +138,12 @@ namespace BotSupport.Dialogs
         /// Данныый метод посылает запросы на бота QnA Maker и получает ответы на эти запросы
         /// </summary>
         /// <param name="platform"></param>
+        /// <param name="role"></param>
         /// <param name="qnaResponse"></param>
         /// <returns></returns>
-        public string QnABotResponse(string platform, string qnaResponse)
+        public string QnABotResponse(string platform, string role, string qnaResponse)
         {
-            QnAMakerKey(platform);
+            QnAMakerKey(platform, role);
 
             string qnaResult = QnARequest.QnAResponse(knowledgebaseId, qnamakerSubscriptionKey, qnaResponse);
 

@@ -225,7 +225,7 @@ namespace BotSupport.Dialogs
             if (!string.IsNullOrEmpty(activity?.Text) && _parametrs)
             {
                 _userQuestion = activity.Text;
-                _answer = new QnADialog().QnABotResponse(_platform, _userQuestion + " " + _role);
+                _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
 
                 if (_answer == "Прошу прощения, но я не понял вопроса. Попробуйте перефразировать его.")
                 {
