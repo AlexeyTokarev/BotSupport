@@ -130,6 +130,8 @@
     <Compile Include="Dialogs\CardDialog.cs" />
     <Compile Include="Dialogs\ParametrsDialog.cs" />
     <Compile Include="Dialogs\QnADialog.cs" />
+    <Compile Include="Dialogs\Redirecting_To_Operator\OperatorsClass.cs" />
+    <Compile Include="Dialogs\Redirecting_To_Operator\OperatorsDialog.cs" />
     <Compile Include="Dialogs\ResetParametrs.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Global.asax.cs">

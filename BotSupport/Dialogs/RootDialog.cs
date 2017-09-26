@@ -5,6 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Threading;
+using BotSupport.Dialogs.Redirecting_To_Operator;
 using GoogleTablesWorking;
 
 namespace BotSupport.Dialogs
@@ -19,6 +20,7 @@ namespace BotSupport.Dialogs
         private string _userQuestion;   // Вопрос пользователя
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
+        private bool _operator;         // Проверка присутствия оператора
 
         public Task StartAsync(IDialogContext context)
         {
@@ -29,6 +31,17 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
+
+            //-----------Проверка пароля оператора--------------
+            if (activity.Text == "Operatorspassword")
+            {
+                OperatorsClass.Id = activity.From.Id;
+                OperatorsClass.Name = activity.From.Name;
+                await context.PostAsync("Вы вошли под учетной записью оператора");
+                _operator = true;
+                return;
+            }
+            //--------------------------------------------------
 
             if (_answerExistence)
             {
@@ -231,6 +244,21 @@ namespace BotSupport.Dialogs
                 {
                     await context.PostAsync(_answer);
                     _answerExistence = false;
+
+                    //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------
+                    if (_operator)
+                    {
+                        try
+                        {
+                            await OperatorsDialog.StartOperatorsDialog(context, result, _platform, _role, _userQuestion);
+                        }
+                        catch
+                        {
+                            throw new ApplicationException();
+                        }
+                    }
+                    //-----------------------------------------------------------
+
                     return;
                 }
 
