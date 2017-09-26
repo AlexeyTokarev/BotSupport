@@ -249,16 +249,15 @@ namespace BotSupport.Dialogs
 
  //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
 
-                    var operatorsAccount = new ChannelAccount("429719242"); //(OperatorsClass.Id, OperatorsClass.Name);
-                    var userAccount = new ChannelAccount(activity.From.Id); //("mlh89j6hg7k", "Bot");
+                    var operatorsAccount = new ChannelAccount("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
+                    var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
                     if (convId == null)
                     {
                         try
                         {
-                            var conversationId =
-                                await connector.Conversations.CreateDirectConversationAsync(operatorsAccount, userAccount);
+                            var conversationId = connector.Conversations.CreateDirectConversation(operatorsAccount, userAccount);
                             convId = conversationId;
                         }
                         catch
