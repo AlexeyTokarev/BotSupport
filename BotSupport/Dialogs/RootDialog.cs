@@ -252,7 +252,7 @@ namespace BotSupport.Dialogs
                     var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
                     var operatorAccount = new ChannelAccount("429719242");//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
 
-                    await context.PostAsync($"Operator: Id - {operatorAccount}, user Id - {activity.From.Id}, Server Id - {activity.Recipient.Id}");
+                    await context.PostAsync($"Operator: Id - {operatorAccount.Id}, user Id - {activity.From.Id}, Server Id - {activity.Recipient.Id}");
                         
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
