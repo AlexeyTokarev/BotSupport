@@ -22,7 +22,7 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
                 try
                 {
                     var conversationId =
-                         connector.Conversations.CreateDirectConversation(userAccount, operatorsAccount);
+                         connector.Conversations.CreateDirectConversation(operatorsAccount, userAccount);
                     convId = conversationId;
                 }
                 catch
@@ -34,8 +34,8 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
             string textForOperator = $"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
-            message.From = userAccount;
-            message.Recipient = operatorsAccount;
+            message.From = operatorsAccount;
+            message.Recipient = userAccount;
             message.Conversation = new ConversationAccount(id: convId.Id);
             message.Text = textForOperator;
             connector.Conversations.SendToConversation((Activity)message);
