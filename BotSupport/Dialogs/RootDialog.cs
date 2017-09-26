@@ -37,7 +37,7 @@ namespace BotSupport.Dialogs
             {
                 OperatorsClass.Id = activity.From.Id;
                 OperatorsClass.Name = activity.From.Name;
-                await context.PostAsync("Вы вошли под учетной записью оператора");
+                await context.PostAsync($"Вы вошли под учетной записью оператора. Your Id = {OperatorsClass.Id}, your Name = {OperatorsClass.Name}");
                 _operator = true;
                 return;
             }
