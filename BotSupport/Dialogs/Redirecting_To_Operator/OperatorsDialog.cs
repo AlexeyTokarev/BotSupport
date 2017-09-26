@@ -34,8 +34,8 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
             string textForOperator = $"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
-            message.From = operatorsAccount;
-            message.Recipient = userAccount;
+            message.From = userAccount;
+            message.Recipient = operatorsAccount;
             message.Conversation = new ConversationAccount(id: convId.Id);
             message.Text = textForOperator;
             connector.Conversations.SendToConversation((Activity)message);
