@@ -21,6 +21,8 @@ namespace BotSupport.Dialogs
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
         //private bool _operator = true;         // Проверка присутствия оператора
+        static ConversationResourceResponse convId = null;
+
 
         public Task StartAsync(IDialogContext context)
         {
@@ -245,11 +247,42 @@ namespace BotSupport.Dialogs
                     await context.PostAsync(_answer);
                     _answerExistence = false;
 
-                    //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------
-                    await Conversation.SendAsync(activity, () => new OperatorsDialog());
+ //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
+
+                    var operatorsAccount = new ChannelAccount("429719242"); //(OperatorsClass.Id, OperatorsClass.Name);
+                    var userAccount = new ChannelAccount(activity.From.Id); //("mlh89j6hg7k", "Bot");
+                    var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+
+                    if (convId == null)
+                    {
+                        try
+                        {
+                            var conversationId =
+                                await connector.Conversations.CreateDirectConversationAsync(operatorsAccount, userAccount);
+                            convId = conversationId;
+                        }
+                        catch
+                        {
+                            throw new InvalidOperationException();
+                        }
+                    }
+
+                    string textForOperator = "Кукусики";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
+
+                    IMessageActivity message = Activity.CreateMessageActivity();
+                    message.From = userAccount;
+                    message.Recipient = operatorsAccount;
+                    message.Conversation = new ConversationAccount(id: convId.Id);
+                    message.Text = textForOperator;
+                    await connector.Conversations.SendToConversationAsync((Activity)message);
+
+                    context.Wait(MessageReceivedAsync);
+
+                    //await Conversation.SendAsync(activity,() => new Dialogs.Redirecting_To_Operator.OperatorsDialog());
+
                     // OperatorsDialog.StartOperatorsDialog(context, result, _platform, _role, _userQuestion);
 
-                    //-----------------------------------------------------------
+ //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                     return;
                 }
