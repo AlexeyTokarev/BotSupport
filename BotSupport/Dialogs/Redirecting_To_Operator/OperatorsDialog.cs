@@ -12,8 +12,8 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
         public static async Task StartOperatorsDialog(IDialogContext context, IAwaitable<object> result, string platform, string role, string userQuestion)
         {
             var activity = await result as Activity;
-            
-            var operatorsAccount = new ChannelAccount(OperatorsClass.Id, OperatorsClass.Name);
+
+            var operatorsAccount = new ChannelAccount("429719242"); //(OperatorsClass.Id, OperatorsClass.Name);
             var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
             var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
