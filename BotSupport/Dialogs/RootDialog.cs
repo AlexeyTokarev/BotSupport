@@ -246,9 +246,9 @@ namespace BotSupport.Dialogs
                     _answerExistence = false;
 
                     //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------
+                    await Conversation.SendAsync(activity, () => new OperatorsDialog());
+                    // OperatorsDialog.StartOperatorsDialog(context, result, _platform, _role, _userQuestion);
 
-                    OperatorsDialog.StartOperatorsDialog(result, _platform, _role, _userQuestion);
-                    
                     //-----------------------------------------------------------
 
                     return;

@@ -5,13 +5,21 @@ using System.Threading.Tasks;
 
 namespace BotSupport.Dialogs.Redirecting_To_Operator
 {
-    public class OperatorsDialog
+    [Serializable]
+    public class OperatorsDialog : IDialog<object>
     {
         static ConversationResourceResponse convId = null;
-        
-        public static void StartOperatorsDialog(IAwaitable<object> result, string platform, string role, string userQuestion)
+
+        public Task StartAsync(IDialogContext context)
         {
-            var activity =  result as Activity;
+            context.Wait(MessageReceivedAsync);
+
+            return Task.CompletedTask;
+        }
+
+        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)//, string platform, string role, string userQuestion)
+        {
+            var activity = await result as Activity;
 
             var operatorsAccount = new ChannelAccount("429719242"); //(OperatorsClass.Id, OperatorsClass.Name);
             var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
@@ -22,7 +30,7 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
                 try
                 {
                     var conversationId =
-                         connector.Conversations.CreateDirectConversation(operatorsAccount, userAccount);
+                        await connector.Conversations.CreateDirectConversationAsync(operatorsAccount, userAccount);
                     convId = conversationId;
                 }
                 catch
@@ -31,14 +39,16 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
                 }
             }
 
-            string textForOperator = $"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
+            string textForOperator = "Кукусики";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
             message.From = userAccount;
             message.Recipient = operatorsAccount;
             message.Conversation = new ConversationAccount(id: convId.Id);
             message.Text = textForOperator;
-            connector.Conversations.SendToConversation((Activity)message);
+            await connector.Conversations.SendToConversationAsync((Activity)message);
+
+            context.Wait(MessageReceivedAsync);
         }
     }
 }
