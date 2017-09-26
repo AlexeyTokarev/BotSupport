@@ -249,8 +249,8 @@ namespace BotSupport.Dialogs
 
  //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
 
-                    var serverAccount = new ChannelAccount("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);//(activity.Recipient.Id, activity.Recipient.Name);
-                    var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+                    var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
+                    var userAccount = new ChannelAccount("429719242", null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
                     if (convId == null)
