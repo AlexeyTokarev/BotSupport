@@ -33,14 +33,14 @@ namespace BotSupport.Dialogs
             var activity = await result as Activity;
 
             //-----------Проверка пароля оператора--------------
-            //if (activity.Text == "Operatorspassword")
-            //{
+            if (activity.Text == "Operatorspassword")
+            {
             //    OperatorsClass.Id = activity.From.Id;
             //    OperatorsClass.Name = activity.From.Name;
-            //    await context.PostAsync($"Вы вошли под учетной записью оператора. Your Id = {OperatorsClass.Id}, your Name = {OperatorsClass.Name}");
+                await context.PostAsync($"Вы вошли под учетной записью оператора. Your Id = {activity.From.Id}, your Name = {activity.From.Name}");
             //    _operator = true;
-            //    return;
-            //}
+                return;
+            }
             //--------------------------------------------------
 
             if (_answerExistence)
