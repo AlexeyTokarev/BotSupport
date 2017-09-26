@@ -256,18 +256,18 @@ namespace BotSupport.Dialogs
                         
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
-                    if (convId == null)
-                    {
-                        try
-                        {
+                    //if (convId == null)
+                    //{
+                    //    try
+                    //    {
                             var conversationId = connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
                             convId = conversationId;
-                        }
-                        catch
-                        {
-                            throw new InvalidOperationException();
-                        }
-                    }
+                    //    }
+                    //    catch
+                    //    {
+                    //        throw new InvalidOperationException();
+                    //    }
+                    //}
 
                     string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
 
