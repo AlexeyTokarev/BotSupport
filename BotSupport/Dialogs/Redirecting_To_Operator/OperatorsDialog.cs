@@ -9,9 +9,9 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
     {
         static ConversationResourceResponse convId = null;
         
-        public static async Task StartOperatorsDialog(IDialogContext context, IAwaitable<object> result, string platform, string role, string userQuestion)
+        public static void StartOperatorsDialog(IAwaitable<object> result, string platform, string role, string userQuestion)
         {
-            var activity = await result as Activity;
+            var activity =  result as Activity;
 
             var operatorsAccount = new ChannelAccount("429719242"); //(OperatorsClass.Id, OperatorsClass.Name);
             var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
@@ -22,7 +22,7 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
                 try
                 {
                     var conversationId =
-                        await connector.Conversations.CreateDirectConversationAsync(userAccount, operatorsAccount);
+                         connector.Conversations.CreateDirectConversation(userAccount, operatorsAccount);
                     convId = conversationId;
                 }
                 catch
@@ -34,11 +34,11 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
             string textForOperator = $"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
-            message.From = operatorsAccount;
-            message.Recipient = userAccount;
+            message.From = userAccount;
+            message.Recipient = operatorsAccount;
             message.Conversation = new ConversationAccount(id: convId.Id);
             message.Text = textForOperator;
-            await connector.Conversations.SendToConversationAsync((Activity)message);
+            connector.Conversations.SendToConversation((Activity)message);
         }
     }
 }

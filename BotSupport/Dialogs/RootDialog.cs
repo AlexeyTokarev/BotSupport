@@ -20,7 +20,7 @@ namespace BotSupport.Dialogs
         private string _userQuestion;   // Вопрос пользователя
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
-        private bool _operator = true;         // Проверка присутствия оператора
+        //private bool _operator = true;         // Проверка присутствия оператора
 
         public Task StartAsync(IDialogContext context)
         {
@@ -246,17 +246,9 @@ namespace BotSupport.Dialogs
                     _answerExistence = false;
 
                     //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------
-                    if (_operator)
-                    {
-                        try
-                        {
-                            await OperatorsDialog.StartOperatorsDialog(context, result, _platform, _role, _userQuestion);
-                        }
-                        catch
-                        {
-                            throw new ApplicationException();
-                        }
-                    }
+
+                    OperatorsDialog.StartOperatorsDialog(result, _platform, _role, _userQuestion);
+                    
                     //-----------------------------------------------------------
 
                     return;
