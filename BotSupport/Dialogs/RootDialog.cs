@@ -270,8 +270,8 @@ namespace BotSupport.Dialogs
                     string textForOperator = "Кукусики";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
-                    message.From = userAccount;
-                    message.Recipient = operatorsAccount;
+                    message.From = operatorsAccount;
+                    message.Recipient = userAccount;
                     message.Conversation = new ConversationAccount(id: convId.Id);
                     message.Text = textForOperator;
                     await connector.Conversations.SendToConversationAsync((Activity)message);
