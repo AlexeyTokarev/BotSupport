@@ -266,7 +266,7 @@ namespace BotSupport.Dialogs
                         }
                     }
 
-                    string textForOperator = $"Площадка: {_platform}\nРоль: {_role}\nВопрос: {_userQuestion}";
+                    string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
                     message.From = serverAccount;
