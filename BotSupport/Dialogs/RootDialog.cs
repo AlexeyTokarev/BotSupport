@@ -249,8 +249,8 @@ namespace BotSupport.Dialogs
 
  //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
 
-                    var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
-                    var userAccount = new ChannelAccount("429719242", null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+                    var serverAccount = new ChannelAccount(activity.Recipient.Id);//, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
+                    var userAccount = new ChannelAccount("429719242");//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
                     if (convId == null)
@@ -276,11 +276,6 @@ namespace BotSupport.Dialogs
                     await connector.Conversations.SendToConversationAsync((Activity)message);
 
                     context.Wait(MessageReceivedAsync);
-
-                    //await Conversation.SendAsync(activity,() => new Dialogs.Redirecting_To_Operator.OperatorsDialog());
-
-                    // OperatorsDialog.StartOperatorsDialog(context, result, _platform, _role, _userQuestion);
-
  //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                     return;
