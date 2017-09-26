@@ -249,7 +249,7 @@ namespace BotSupport.Dialogs
 
  //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
 
-                    var operatorsAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
+                    var serverAccount = new ChannelAccount("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);//(activity.Recipient.Id, activity.Recipient.Name);
                     var userAccount = new ChannelAccount(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
@@ -257,7 +257,7 @@ namespace BotSupport.Dialogs
                     {
                         try
                         {
-                            var conversationId = connector.Conversations.CreateDirectConversation(operatorsAccount, userAccount);
+                            var conversationId = connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
                             convId = conversationId;
                         }
                         catch
@@ -266,11 +266,11 @@ namespace BotSupport.Dialogs
                         }
                     }
 
-                    string textForOperator = "Кукусики";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
+                    string textForOperator = $"Площадка: {_platform}\nРоль: {_role}\nВопрос: {_userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
-                    message.From = operatorsAccount;
-                    message.Recipient = userAccount;
+                    message.From = userAccount;
+                    message.Recipient = serverAccount;
                     message.Conversation = new ConversationAccount(id: convId.Id);
                     message.Text = textForOperator;
                     await connector.Conversations.SendToConversationAsync((Activity)message);
