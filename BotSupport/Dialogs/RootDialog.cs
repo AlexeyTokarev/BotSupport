@@ -20,7 +20,7 @@ namespace BotSupport.Dialogs
         private string _userQuestion;   // Вопрос пользователя
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
-        private bool _operator;         // Проверка присутствия оператора
+        private bool _operator = true;         // Проверка присутствия оператора
 
         public Task StartAsync(IDialogContext context)
         {
