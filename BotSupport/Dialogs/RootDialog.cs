@@ -262,7 +262,7 @@ namespace BotSupport.Dialogs
                     //{
                     //    try
                     //    {
-                            var conversationId = connector.Conversations.CreateDirectConversation(userAccount, operatorAccount);
+                            var conversationId = connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
                             convId = conversationId;
                     //    }
                     //    catch
@@ -274,8 +274,8 @@ namespace BotSupport.Dialogs
                     string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
-                    message.From = userAccount;
-                    message.Recipient = operatorAccount;
+                    message.From = serverAccount;
+                    message.Recipient = userAccount;
                     message.Conversation = new ConversationAccount(id: convId.Id);
                     message.Text = textForOperator;
                     await connector.Conversations.SendToConversationAsync((Activity)message);
