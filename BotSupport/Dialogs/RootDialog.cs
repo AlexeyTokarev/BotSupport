@@ -22,7 +22,7 @@ namespace BotSupport.Dialogs
         private bool _correct;          // Проверка корректности выданного ответа
         //private bool _operator = true;         // Проверка присутствия оператора
         static ConversationResourceResponse convId = null;
-
+        private static string userId = String.Empty;
 
         public Task StartAsync(IDialogContext context)
         {
@@ -250,7 +250,7 @@ namespace BotSupport.Dialogs
                     //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
                     // if (activity.From.Id!="429719242" || activity.From.Id!="364330644") return; // Так как тестируется на проде, идет проветка двух проверенных Id
                     string operatorId = "429719242";
-                    string userId = String.Empty;
+                    
 
                     bool toOperator = true;
 
