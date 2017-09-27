@@ -258,6 +258,12 @@ namespace BotSupport.Dialogs
                     {
                         await context.PostAsync("Вы оператор!");
                         toOperator = false;
+
+                        if (String.IsNullOrEmpty(userId))
+                        {
+                            await context.PostAsync("Ни одного пользователя не пдключено к оператору");
+                            return;
+                        }
                     }
                     else
                     {
