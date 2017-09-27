@@ -13,16 +13,20 @@ namespace BotSupport.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        private string _platform;       //Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
+        private string _platform;       // Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
         private string _role;           // Какова роль пользователя ("Заказчик", "Поставщик")
         private bool _parametrs;        // Быстрая проверка наличия всех параметров
         private bool _answerExistence;  // Проверка наличия ответов 
         private string _userQuestion;   // Вопрос пользователя
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
-        //private bool _operator = true;         // Проверка присутствия оператора
+
+        // Для работы с перенаправлением сообщений оператору
+        private static bool _operatorsConversation;
         static ConversationResourceResponse convId = null;
-        private static string userId = String.Empty;
+        private static string _userId = String.Empty; // Id пользователя. Предназначено для участка кода, работающего с перенаправлением сообщений оператору
+
+
 
         public Task StartAsync(IDialogContext context)
         {
@@ -34,16 +38,7 @@ namespace BotSupport.Dialogs
         {
             var activity = await result as Activity;
 
-            //-----------Проверка пароля оператора--------------
-            if (activity.Text == "Operatorspassword")
-            {
-                //    OperatorsClass.Id = activity.From.Id;
-                //    OperatorsClass.Name = activity.From.Name;
-                await context.PostAsync($"Вы вошли под учетной записью оператора. Your Id = {activity.From.Id}, your Name = {activity.From.Name}");
-                //    _operator = true;
-                return;
-            }
-            //--------------------------------------------------
+            if (_operatorsConversation) await ToOperator(context, activity);
 
             if (_answerExistence)
             {
@@ -107,6 +102,7 @@ namespace BotSupport.Dialogs
                     _platform = null;
                     _role = null;
                     _parametrs = false;
+                    _operatorsConversation = false;
                 }
             }
             catch (Exception ex)
@@ -157,19 +153,6 @@ namespace BotSupport.Dialogs
                             {
                                 _role = apiAiResponse.Role;
                             }
-
-                            //// Проверка наличия, добавление или редактирование параметра "Тип"
-                            //if (!string.IsNullOrEmpty(type))
-                            //{
-                            //    if ((type != apiAiResponse.Type) && (!string.IsNullOrEmpty(apiAiResponse.Type)))
-                            //    {
-                            //        type = apiAiResponse.Type;
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    type = apiAiResponse.Type;
-                            //}
                         }
                     }
                     else
@@ -246,74 +229,8 @@ namespace BotSupport.Dialogs
                 {
                     await context.PostAsync(_answer);
                     _answerExistence = false;
-
-                    //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
-                    // if (activity.From.Id!="429719242" || activity.From.Id!="364330644") return; // Так как тестируется на проде, идет проветка двух проверенных Id
-                    string operatorId = "429719242";
-                    
-
-                    bool toOperator = true;
-
-                    if (activity.From.Id == operatorId)
-                    {
-                        await context.PostAsync("Вы оператор!");
-                        toOperator = false;
-
-                        if (String.IsNullOrEmpty(userId))
-                        {
-                            await context.PostAsync("Ни одного пользователя не пдключено к оператору");
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        userId = activity.From.Id;
-                    }
-
-                    var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
-                    var operatorAccount = new ChannelAccount(operatorId);//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
-                    var userAccount = new ChannelAccount(userId);
-
-                    await context.PostAsync($"Operator: Id - {operatorAccount.Id}, user Id - {activity.From.Id}, Server Id - {activity.Recipient.Id}");
-
-                    var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-
-                    if (toOperator)
-                    {
-                        var conversationId =
-                            connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
-                        convId = conversationId;
-                    }
-                    else
-                    {
-                        var conversationId =
-                            connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
-                        convId = conversationId;
-                    }
-
-                    string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
-
-                    IMessageActivity message = Activity.CreateMessageActivity();
-
-                    message.From = serverAccount;
-
-                        if (toOperator)
-                        {
-                            message.Recipient = operatorAccount;
-                        }
-                        else
-                        {
-                            message.Recipient = userAccount;
-                        }
-
-                    message.Conversation = new ConversationAccount(id: convId.Id);
-                    message.Text = textForOperator;
-
-                    await connector.Conversations.SendToConversationAsync((Activity)message);
-
-                    context.Wait(MessageReceivedAsync);
+                    await ToOperator(context, activity);
                     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
                     return;
                 }
 
@@ -350,6 +267,75 @@ namespace BotSupport.Dialogs
                 CardDialog.SatisfyingAnswer(context, activity);
             }
             //context.Wait(MessageReceivedAsync);
+        }
+
+
+        //---------------------------------------------УЧАСТОК КОДА С ПЕРЕНАПРАВЛЕНИЕМ СООБЩЕНИЙ ОПЕРАТОРУ-------------------------------------
+
+        public async Task ToOperator(IDialogContext context, Activity activity)
+        {
+
+            _operatorsConversation = true;
+
+            string operatorId = "429719242";
+            bool toOperator = true;
+
+            if (activity.From.Id == operatorId)
+            {
+                await context.PostAsync("Вы оператор!");
+                toOperator = false;
+
+                if (String.IsNullOrEmpty(_userId))
+                {
+                    await context.PostAsync("Ни одного пользователя не подключено к оператору");
+                    return;
+                }
+            }
+            else
+            {
+                _userId = activity.From.Id;
+            }
+
+            var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
+            var operatorAccount = new ChannelAccount(operatorId);//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+            var userAccount = new ChannelAccount(_userId);
+
+            var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+
+            if (toOperator)
+            {
+                var conversationId =
+                    connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
+                convId = conversationId;
+            }
+            else
+            {
+                var conversationId =
+                    connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
+                convId = conversationId;
+            }
+
+            string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nСообщение: {_userQuestion}";
+
+            IMessageActivity message = Activity.CreateMessageActivity();
+
+            message.From = serverAccount;
+
+            if (toOperator)
+            {
+                message.Recipient = operatorAccount;
+                message.Text = textForOperator;
+            }
+            else
+            {
+                message.Recipient = userAccount;
+                message.Text = activity.Text;
+            }
+
+            message.Conversation = new ConversationAccount(id: convId.Id);
+
+            await connector.Conversations.SendToConversationAsync((Activity)message);
+            context.Wait(MessageReceivedAsync);
         }
     }
 }
