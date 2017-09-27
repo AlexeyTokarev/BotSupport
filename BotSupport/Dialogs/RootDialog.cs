@@ -252,6 +252,7 @@ namespace BotSupport.Dialogs
 
                     var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
                     var operatorAccount = new ChannelAccount("429719242");//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+                    var userAccount = new ChannelAccount(activity.From.Id);
 
                     await context.PostAsync($"Operator: Id - {operatorAccount.Id}, user Id - {activity.From.Id}, Server Id - {activity.Recipient.Id}");
                         
@@ -273,7 +274,7 @@ namespace BotSupport.Dialogs
                     string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
-                    message.From = serverAccount;
+                    message.From = userAccount;
                     message.Recipient = operatorAccount;
                     message.Conversation = new ConversationAccount(id: convId.Id);
                     message.Text = textForOperator;
