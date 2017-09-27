@@ -262,7 +262,7 @@ namespace BotSupport.Dialogs
                     //{
                     //    try
                     //    {
-                            var conversationId = connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
+                            var conversationId = connector.Conversations.CreateDirectConversation(userAccount, operatorAccount);
                             convId = conversationId;
                     //    }
                     //    catch
