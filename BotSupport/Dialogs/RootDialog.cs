@@ -248,6 +248,7 @@ namespace BotSupport.Dialogs
                     _answerExistence = false;
 
  //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
+                    if (activity.From.Id!="429719242" || activity.From.Id!="364330644") return; // Так как тестируется на проде, идет проветка двух проверенных Id
 
                     var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
                     var operatorAccount = new ChannelAccount("429719242");//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
