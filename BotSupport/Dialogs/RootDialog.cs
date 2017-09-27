@@ -37,10 +37,10 @@ namespace BotSupport.Dialogs
             //-----------Проверка пароля оператора--------------
             if (activity.Text == "Operatorspassword")
             {
-            //    OperatorsClass.Id = activity.From.Id;
-            //    OperatorsClass.Name = activity.From.Name;
+                //    OperatorsClass.Id = activity.From.Id;
+                //    OperatorsClass.Name = activity.From.Name;
                 await context.PostAsync($"Вы вошли под учетной записью оператора. Your Id = {activity.From.Id}, your Name = {activity.From.Name}");
-            //    _operator = true;
+                //    _operator = true;
                 return;
             }
             //--------------------------------------------------
@@ -99,7 +99,7 @@ namespace BotSupport.Dialogs
                     }
                 }
             }
-            
+
             try
             {
                 if (ResetParametrs.Reset(activity?.Text))
@@ -178,7 +178,7 @@ namespace BotSupport.Dialogs
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
-                    if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role)) 
+                    if (string.IsNullOrEmpty(_platform) || string.IsNullOrEmpty(_role))
                     {
                         string checkParametrs = ParametrsDialog.CheckParametrs(_platform, _role);
 
@@ -247,41 +247,66 @@ namespace BotSupport.Dialogs
                     await context.PostAsync(_answer);
                     _answerExistence = false;
 
- //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
-                   // if (activity.From.Id!="429719242" || activity.From.Id!="364330644") return; // Так как тестируется на проде, идет проветка двух проверенных Id
+                    //---------------- Если оператор присутствует, то пересылать сообщения ему-----------------------------------------------------------------------------------------------------------------------------------------
+                    // if (activity.From.Id!="429719242" || activity.From.Id!="364330644") return; // Так как тестируется на проде, идет проветка двух проверенных Id
+                    string operatorId = "429719242";
+                    string userId = String.Empty;
+
+                    bool toOperator = true;
+
+                    if (activity.From.Id == operatorId)
+                    {
+                        await context.PostAsync("Вы оператор!");
+                        toOperator = false;
+                    }
+                    else
+                    {
+                        userId = activity.From.Id;
+                    }
 
                     var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
-                    var operatorAccount = new ChannelAccount("429719242");//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
-                    var userAccount = new ChannelAccount(activity.From.Id);
+                    var operatorAccount = new ChannelAccount(operatorId);//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+                    var userAccount = new ChannelAccount(userId);
 
                     await context.PostAsync($"Operator: Id - {operatorAccount.Id}, user Id - {activity.From.Id}, Server Id - {activity.Recipient.Id}");
-                        
+
                     var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
-                    //if (convId == null)
-                    //{
-                    //    try
-                    //    {
-                            var conversationId = connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
-                            convId = conversationId;
-                    //    }
-                    //    catch
-                    //    {
-                    //        throw new InvalidOperationException();
-                    //    }
-                    //}
+                    if (toOperator)
+                    {
+                        var conversationId =
+                            connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
+                        convId = conversationId;
+                    }
+                    else
+                    {
+                        var conversationId =
+                            connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
+                        convId = conversationId;
+                    }
 
                     string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nВопрос: {_userQuestion}";
 
                     IMessageActivity message = Activity.CreateMessageActivity();
+
                     message.From = serverAccount;
-                    message.Recipient = userAccount;
+
+                        if (toOperator)
+                        {
+                            message.Recipient = operatorAccount;
+                        }
+                        else
+                        {
+                            message.Recipient = userAccount;
+                        }
+
                     message.Conversation = new ConversationAccount(id: convId.Id);
                     message.Text = textForOperator;
+
                     await connector.Conversations.SendToConversationAsync((Activity)message);
 
                     context.Wait(MessageReceivedAsync);
- //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                     return;
                 }
