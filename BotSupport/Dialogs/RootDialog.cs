@@ -45,6 +45,7 @@ namespace BotSupport.Dialogs
                 if (ResetParametrs.Reset(activity?.Text))
                 {
                     MakeReset();
+                    await context.PostAsync("До свидания");
                 }
                 return;
             }
