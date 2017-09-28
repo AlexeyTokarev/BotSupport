@@ -41,6 +41,11 @@ namespace BotSupport.Dialogs
             // Проверка на разговор с оператором
             if (_operatorsConversation)
             {
+                if (ResetParametrs.Reset(activity?.Text))
+                {
+                    MakeReset();
+                    return;
+                }
                 await ToOperator(context, activity);
                 return;
             }
@@ -105,10 +110,7 @@ namespace BotSupport.Dialogs
             {
                 if (ResetParametrs.Reset(activity?.Text))
                 {
-                    _platform = null;
-                    _role = null;
-                    _parametrs = false;
-                    _operatorsConversation = false;
+                    MakeReset();
                 }
             }
             catch (Exception ex)
@@ -341,6 +343,14 @@ namespace BotSupport.Dialogs
 
             await connector.Conversations.SendToConversationAsync((Activity)message);
             context.Wait(MessageReceivedAsync);
+        }
+
+        public void MakeReset()
+        {
+            _platform = null;
+            _role = null;
+            _parametrs = false;
+            _operatorsConversation = false;
         }
     }
 }
