@@ -321,7 +321,7 @@ namespace BotSupport.Dialogs
                 convId = conversationId;
             }
 
-            string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nСообщение: {_userQuestion}";
+            string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nСообщение: {activity.Text}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
 
@@ -351,6 +351,7 @@ namespace BotSupport.Dialogs
             _parametrs = false;
             _operatorsConversation = false;
             _userQuestion = null;
+            _answer = null;
         }
     }
 }
