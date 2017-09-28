@@ -41,11 +41,11 @@ namespace BotSupport.Dialogs
             // Проверка на разговор с оператором
             if (_operatorsConversation)
             {
+                await ToOperator(context, activity);
                 if (ResetParametrs.Reset(activity?.Text))
                 {
                     MakeReset();
                 }
-                await ToOperator(context, activity);
                 return;
             }
             //-----------------------------------
