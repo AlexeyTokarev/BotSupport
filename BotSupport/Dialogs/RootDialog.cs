@@ -44,7 +44,6 @@ namespace BotSupport.Dialogs
                 if (ResetParametrs.Reset(activity?.Text))
                 {
                     MakeReset();
-                    return;
                 }
                 await ToOperator(context, activity);
                 return;
@@ -351,6 +350,7 @@ namespace BotSupport.Dialogs
             _role = null;
             _parametrs = false;
             _operatorsConversation = false;
+            _userQuestion = null;
         }
     }
 }
