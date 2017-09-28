@@ -23,7 +23,7 @@ namespace BotSupport.Dialogs
 
         // Для работы с перенаправлением сообщений оператору
         private static bool _operatorsConversation;
-        static ConversationResourceResponse convId = null;
+        static ConversationResourceResponse convId;
         private static string _userId = String.Empty; // Id пользователя. Предназначено для участка кода, работающего с перенаправлением сообщений оператору
 
 
@@ -38,7 +38,13 @@ namespace BotSupport.Dialogs
         {
             var activity = await result as Activity;
 
-            if (_operatorsConversation) await ToOperator(context, activity);
+            // Проверка на разговор с оператором
+            if (_operatorsConversation)
+            {
+                await ToOperator(context, activity);
+                return;
+            }
+            //-----------------------------------
 
             if (_answerExistence)
             {
@@ -282,7 +288,6 @@ namespace BotSupport.Dialogs
 
             if (activity.From.Id == operatorId)
             {
-                await context.PostAsync("Вы оператор!");
                 toOperator = false;
 
                 if (String.IsNullOrEmpty(_userId))
@@ -296,8 +301,8 @@ namespace BotSupport.Dialogs
                 _userId = activity.From.Id;
             }
 
-            var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);//("429719242", null); //(OperatorsClass.Id, OperatorsClass.Name);
-            var operatorAccount = new ChannelAccount(operatorId);//, null); //(activity.From.Id, activity.From.Name); //("mlh89j6hg7k", "Bot");
+            var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);
+            var operatorAccount = new ChannelAccount(operatorId);
             var userAccount = new ChannelAccount(_userId);
 
             var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
