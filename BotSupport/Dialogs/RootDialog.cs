@@ -237,7 +237,9 @@ namespace BotSupport.Dialogs
                 {
                     await context.PostAsync(_answer);
                     _answerExistence = false;
-                    await ToOperator(context, activity);
+
+                    // Для включения/выключения функции перенаправления оператору
+                    // await ToOperator(context, activity); 
                     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
                     return;
                 }
