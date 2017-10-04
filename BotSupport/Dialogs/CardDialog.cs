@@ -123,8 +123,8 @@ namespace BotSupport.Dialogs
             var cardButton = new List<CardAction>();
             var card1 = new CardAction()
             {
-                Value = "Орган по ведению реестра",
-                Title = "Орган по ведению реестра"
+                Value = "ОВР",
+                Title = "ОВР"
             };
             var card2 = new CardAction()
             {
