@@ -35,13 +35,13 @@ namespace BotSupport.Dialogs
                 };
                 var card3 = new CardAction()
                 {
-                    Value = "615-ФЗ",
-                    Title = "615-ФЗ"
+                    Value = "615-ПП РФ",
+                    Title = "615-ПП РФ"
                 };
                 var card4 = new CardAction()
                 {
-                    Value = "Имущество",
-                    Title = "Имущество"
+                    Value = "Имущественные торги",
+                    Title = "Имущественные торги"
                 };
                 var card5 = new CardAction()
                 {
@@ -72,7 +72,7 @@ namespace BotSupport.Dialogs
         }
 
         /// <summary>
-        /// Метод, определяющий роль пользователя по площадке 223-ФЗ, 44-ФЗ, 615-ФЗ, РТС-Маркет
+        /// Метод, определяющий роль пользователя по площадке 223-ФЗ, 44-ФЗ
         /// </summary>
         /// <param name="context"></param>
         /// <param name="activity"></param>
@@ -90,11 +90,55 @@ namespace BotSupport.Dialogs
             };
             var card2 = new CardAction()
             {
-                Value = "Поставщик",
-                Title = "Поставщик"
+                Value = "Участник",
+                Title = "Участник"
             };
             cardButton.Add(card1);
             cardButton.Add(card2);
+
+            var hero = new HeroCard()
+            {
+                Buttons = cardButton,
+                Text = checkParametrs
+            };
+
+            var attach = hero.ToAttachment();
+            if (attach == null) throw new ArgumentNullException(nameof(attach));
+
+            replyToConversation.Attachments.Add(attach);
+            context.PostAsync(replyToConversation);
+        }
+
+        /// <summary>
+        /// Метод, определяющий роль пользователя по площадке 615-ПП РФ
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="activity"></param>
+        /// <param name="checkParametrs"></param>
+        public static void RoleCard615(IDialogContext context, Activity activity, string checkParametrs)
+        {
+            var replyToConversation = activity.CreateReply();
+            replyToConversation.Attachments = new List<Attachment>();
+
+            var cardButton = new List<CardAction>();
+            var card1 = new CardAction()
+            {
+                Value = "Заказчик",
+                Title = "Заказчик"
+            };
+            var card2 = new CardAction()
+            {
+                Value = "Участник",
+                Title = "Участник"
+            };
+            var card3 = new CardAction()
+            {
+                Value = "Орган по ведению реестра",
+                Title = "Орган по ведению реестра"
+            };
+            cardButton.Add(card1);
+            cardButton.Add(card2);
+            cardButton.Add(card3);
 
             var hero = new HeroCard()
             {
@@ -123,13 +167,50 @@ namespace BotSupport.Dialogs
             var cardButton = new List<CardAction>();
             var card1 = new CardAction()
             {
-                Value = "Продавец",
-                Title = "Продавец"
+                Value = "Продавец/Арендодатель",
+                Title = "Продавец/Арендодатель"
             };
             var card2 = new CardAction()
             {
-                Value = "Покупатель",
-                Title = "Покупатель"
+                Value = "Претендент/Арендатор",
+                Title = "Претендент/Арендатор"
+            };
+            cardButton.Add(card1);
+            cardButton.Add(card2);
+
+            var hero = new HeroCard()
+            {
+                Buttons = cardButton,
+                Text = checkParametrs
+            };
+
+            var attach = hero.ToAttachment();
+            if (attach == null) throw new ArgumentNullException(nameof(attach));
+
+            replyToConversation.Attachments.Add(attach);
+            context.PostAsync(replyToConversation);
+        }
+        /// <summary>
+        /// Метод, определяющий роль пользователя по площадке "РТС-Маркет"
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="activity"></param>
+        /// <param name="checkParametrs"></param>
+        public static void RoleCardRTS(IDialogContext context, Activity activity, string checkParametrs)
+        {
+            var replyToConversation = activity.CreateReply();
+            replyToConversation.Attachments = new List<Attachment>();
+
+            var cardButton = new List<CardAction>();
+            var card1 = new CardAction()
+            {
+                Value = "Заказчик",
+                Title = "Заказчик"
+            };
+            var card2 = new CardAction()
+            {
+                Value = "Поставщик",
+                Title = "Поставщик"
             };
             cardButton.Add(card1);
             cardButton.Add(card2);

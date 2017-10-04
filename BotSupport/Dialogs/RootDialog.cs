@@ -187,11 +187,35 @@ namespace BotSupport.Dialogs
 
                         if (string.IsNullOrEmpty(_role) && !string.IsNullOrEmpty(_platform))
                         {
-                            if (_platform == "Имущество")
+                            if (_platform == "Имущественные торги")
                             {
                                 try
                                 {
                                     CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
+                                    return;
+                                }
+                                catch (Exception ex)
+                                {
+                                    await context.PostAsync(ex.Message);
+                                }
+                            }
+                            if (_platform == "РТС-Маркет")
+                            {
+                                try
+                                {
+                                    CardDialog.RoleCardRTS(context, activity, checkParametrs);
+                                    return;
+                                }
+                                catch (Exception ex)
+                                {
+                                    await context.PostAsync(ex.Message);
+                                }
+                            }
+                            if (_platform == "615-ПП РФ")
+                            {
+                                try
+                                {
+                                    CardDialog.RoleCard615(context, activity, checkParametrs);
                                     return;
                                 }
                                 catch (Exception ex)

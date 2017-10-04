@@ -65,7 +65,7 @@ namespace BotSupport.Dialogs
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
-                case "615-ФЗ":
+                case "615-ПП РФ":
                     {
                         switch (role)
                         {
@@ -81,13 +81,19 @@ namespace BotSupport.Dialogs
                                     qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                                     break;
                                 }
+                            case "ОВР":
+                                {
+                                knowledgebaseId = "589984e8-8462-4c64-bfb1-fbaaca8e4983";
+                                qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                break;
+                                }
                         }
                         //Первоначальный вариант общей базы знаний
                         //knowledgebaseId = "71728f39-34d9-4dbb-bfbe-85d8fb2dfa96";
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
-                case "Имущество":
+                case "Имущественные торги":
                     {
                         switch (role)
                         {
