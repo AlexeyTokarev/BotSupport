@@ -69,12 +69,12 @@ namespace BotSupport.Dialogs
                         try
                         {
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
+                            await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
                         }
-                        catch (Exception ex)
+                        catch
                         {
-                            await context.PostAsync(ex.Message);
+                            await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
-                        await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
                         _userQuestion = null;
                         _answer = null;
                         _answerExistence = false;
@@ -89,13 +89,12 @@ namespace BotSupport.Dialogs
                         try
                         {
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
+                            await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
                         }
-                        catch (Exception ex)
+                        catch
                         {
-                            await context.PostAsync(ex.Message);
+                            await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
-                        await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
-
                         _answer = null;
                         _userQuestion = null;
                         Thread.Sleep(1500);
@@ -113,9 +112,9 @@ namespace BotSupport.Dialogs
                     MakeReset();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                await context.PostAsync(ex.Message);
+                await context.PostAsync("Возникли проблемы с работой сервиса. Приносим извинения за неудобство");
             }
 
             if (_parametrs == false)
@@ -124,12 +123,13 @@ namespace BotSupport.Dialogs
                 {
                     if (!string.IsNullOrWhiteSpace(activity?.Text))
                     {
+
                         var apiAiResponse = ApiAiRequest.ApiAiBotRequest(activity.Text);
 
                         // Если есть ошибки
                         if (apiAiResponse.Errors != null && apiAiResponse.Errors.Count > 0)
                         {
-                            await context.PostAsync("Что-то пошло не так, повторите попытку");
+                            await context.PostAsync("Что-то пошло не так");
                         }
 
                         // Если нет ошибок
@@ -162,10 +162,11 @@ namespace BotSupport.Dialogs
                                 _role = apiAiResponse.Role;
                             }
                         }
+
                     }
                     else
                     {
-                        await context.PostAsync("Что-то пошло не так, повторите попытку");
+                        await context.PostAsync("Что-то пошло не так");
                     }
 
                     // Идет проверка наличия всех заполненных и незаполненных параметров с последующим информированием пользователя
@@ -179,9 +180,9 @@ namespace BotSupport.Dialogs
                             {
                                 CardDialog.PlatformCard(context, activity, checkParametrs);
                             }
-                            catch (Exception ex)
+                            catch
                             {
-                                await context.PostAsync(ex.Message);
+                                await context.PostAsync("Что-то пошло не так");
                             }
                         }
 
@@ -194,9 +195,9 @@ namespace BotSupport.Dialogs
                                     CardDialog.RoleCardImuchestvo(context, activity, checkParametrs);
                                     return;
                                 }
-                                catch (Exception ex)
+                                catch
                                 {
-                                    await context.PostAsync(ex.Message);
+                                    await context.PostAsync("Что-то пошло не так");
                                 }
                             }
                             if (_platform == "РТС-Маркет")
@@ -206,9 +207,9 @@ namespace BotSupport.Dialogs
                                     CardDialog.RoleCardRTS(context, activity, checkParametrs);
                                     return;
                                 }
-                                catch (Exception ex)
+                                catch
                                 {
-                                    await context.PostAsync(ex.Message);
+                                    await context.PostAsync("Что-то пошло не так");
                                 }
                             }
                             if (_platform == "615-ПП РФ")
@@ -218,9 +219,9 @@ namespace BotSupport.Dialogs
                                     CardDialog.RoleCard615(context, activity, checkParametrs);
                                     return;
                                 }
-                                catch (Exception ex)
+                                catch
                                 {
-                                    await context.PostAsync(ex.Message);
+                                    await context.PostAsync("Что-то пошло не так");
                                 }
                             }
                             else
@@ -230,9 +231,9 @@ namespace BotSupport.Dialogs
                                     CardDialog.RoleCard(context, activity, checkParametrs);
                                     return;
                                 }
-                                catch (Exception ex)
+                                catch
                                 {
-                                    await context.PostAsync(ex.Message);
+                                    await context.PostAsync("Что-то пошло не так");
                                 }
                             }
                         }
@@ -254,51 +255,65 @@ namespace BotSupport.Dialogs
 
             if (!string.IsNullOrEmpty(activity?.Text) && _parametrs)
             {
-                _userQuestion = activity.Text;
-                _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
-
-                if (_answer == "Прошу прощения, но я не понял вопроса. Попробуйте перефразировать его.")
+                try
                 {
-                    await context.PostAsync(_answer);
-                    _answerExistence = false;
-
-                    // Для включения/выключения функции перенаправления оператору
-                    // await ToOperator(context, activity); 
-                    //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    return;
-                }
-
-                // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
-                if (_answer.Length > 3500)
-                {
-                    // Создание копии ответа, для корректного занесения в таблицу ответов 
-                    string copyAnswer = _answer;
-                    while (copyAnswer.Length > 3500)
+                    _userQuestion = activity.Text;
+                    try
                     {
-                        var substringPoint = 3500;
-
-                        // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
-                        // Причем разделение проводится по предложениям (Ориентиром является точка)
-                        while (copyAnswer[substringPoint] != '.')
-                        {
-                            substringPoint--;
-                        }
-
-                        var subanswer = copyAnswer.Substring(0, substringPoint + 1);
-
-                        await context.PostAsync(subanswer);
-                        copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
+                        _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
                     }
-                    await context.PostAsync(copyAnswer);
-                    _answerExistence = true;
+                    catch
+                    {
+                        await context.PostAsync("Что-то пошло не так");
+                    }
+
+                    if (_answer == "Прошу прощения, но я не понял вопроса. Попробуйте перефразировать его.")
+                    {
+                        await context.PostAsync(_answer);
+                        _answerExistence = false;
+
+                        // Для включения/выключения функции перенаправления оператору
+                        // await ToOperator(context, activity); 
+                        //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                        return;
+                    }
+
+                    // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
+                    if (_answer.Length > 3500)
+                    {
+                        // Создание копии ответа, для корректного занесения в таблицу ответов 
+                        string copyAnswer = _answer;
+                        while (copyAnswer.Length > 3500)
+                        {
+                            var substringPoint = 3500;
+
+                            // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
+                            // Причем разделение проводится по предложениям (Ориентиром является точка)
+                            while (copyAnswer[substringPoint] != '.')
+                            {
+                                substringPoint--;
+                            }
+
+                            var subanswer = copyAnswer.Substring(0, substringPoint + 1);
+
+                            await context.PostAsync(subanswer);
+                            copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
+                        }
+                        await context.PostAsync(copyAnswer);
+                        _answerExistence = true;
+                    }
+                    else
+                    {
+                        await context.PostAsync(_answer);
+                        _answerExistence = true;
+                    }
+                    Thread.Sleep(1500);
+                    CardDialog.SatisfyingAnswer(context, activity);
                 }
-                else
+                catch
                 {
-                    await context.PostAsync(_answer);
-                    _answerExistence = true;
+                    await context.PostAsync("Что-то пошло не так");
                 }
-                Thread.Sleep(1500);
-                CardDialog.SatisfyingAnswer(context, activity);
             }
             //context.Wait(MessageReceivedAsync);
         }
@@ -308,66 +323,72 @@ namespace BotSupport.Dialogs
 
         public async Task ToOperator(IDialogContext context, Activity activity)
         {
-
-            _operatorsConversation = true;
-
-            string operatorId = "429719242";
-            bool toOperator = true;
-
-            if (activity.From.Id == operatorId)
+            try
             {
-                toOperator = false;
+                _operatorsConversation = true;
 
-                if (String.IsNullOrEmpty(_userId))
+                string operatorId = "429719242";
+                bool toOperator = true;
+
+                if (activity.From.Id == operatorId)
                 {
-                    await context.PostAsync("Ни одного пользователя не подключено к оператору");
-                    return;
+                    toOperator = false;
+
+                    if (String.IsNullOrEmpty(_userId))
+                    {
+                        await context.PostAsync("Ни одного пользователя не подключено к оператору");
+                        return;
+                    }
                 }
+                else
+                {
+                    _userId = activity.From.Id;
+                }
+
+                var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);
+                var operatorAccount = new ChannelAccount(operatorId);
+                var userAccount = new ChannelAccount(_userId);
+
+                var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
+
+                if (toOperator)
+                {
+                    var conversationId =
+                        connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
+                    convId = conversationId;
+                }
+                else
+                {
+                    var conversationId =
+                        connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
+                    convId = conversationId;
+                }
+
+                string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nСообщение: {activity.Text}";
+
+                IMessageActivity message = Activity.CreateMessageActivity();
+
+                message.From = serverAccount;
+
+                if (toOperator)
+                {
+                    message.Recipient = operatorAccount;
+                    message.Text = textForOperator;
+                }
+                else
+                {
+                    message.Recipient = userAccount;
+                    message.Text = activity.Text;
+                }
+
+                message.Conversation = new ConversationAccount(id: convId.Id);
+
+                await connector.Conversations.SendToConversationAsync((Activity)message);
             }
-            else
+            catch
             {
-                _userId = activity.From.Id;
+                await context.PostAsync("Что-то пошло не так");
             }
-
-            var serverAccount = new ChannelAccount(activity.Recipient.Id, activity.Recipient.Name);
-            var operatorAccount = new ChannelAccount(operatorId);
-            var userAccount = new ChannelAccount(_userId);
-
-            var connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-
-            if (toOperator)
-            {
-                var conversationId =
-                    connector.Conversations.CreateDirectConversation(serverAccount, operatorAccount);
-                convId = conversationId;
-            }
-            else
-            {
-                var conversationId =
-                    connector.Conversations.CreateDirectConversation(serverAccount, userAccount);
-                convId = conversationId;
-            }
-
-            string textForOperator = $"Площадка: {_platform}\n\nРоль: {_role}\n\nСообщение: {activity.Text}";
-
-            IMessageActivity message = Activity.CreateMessageActivity();
-
-            message.From = serverAccount;
-
-            if (toOperator)
-            {
-                message.Recipient = operatorAccount;
-                message.Text = textForOperator;
-            }
-            else
-            {
-                message.Recipient = userAccount;
-                message.Text = activity.Text;
-            }
-
-            message.Conversation = new ConversationAccount(id: convId.Id);
-
-            await connector.Conversations.SendToConversationAsync((Activity)message);
             context.Wait(MessageReceivedAsync);
         }
 
