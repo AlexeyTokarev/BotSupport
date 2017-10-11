@@ -65,40 +65,47 @@ namespace BotSupport.Dialogs
                     if (activity.Text.ToLower() == "да")
                     {
                         _correct = true;
-                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                        //await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                        await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+
                         try
                         {
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
-                            await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
                         }
                         catch
                         {
-                            await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
+                            //_userQuestion = null;
+                            //_answer = null;
+                            //_answerExistence = false;
+                            //_correct = false;
+                            //return;//await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
                         _userQuestion = null;
                         _answer = null;
                         _answerExistence = false;
                         _correct = false;
-                        Thread.Sleep(1500);
-                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
                         return;
                     }
                     if (activity.Text.ToLower() == "нет")
                     {
-                        await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                        //await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
+                       
+                        await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+                        
                         try
                         {
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
-                            await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
                         }
                         catch
                         {
-                            await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
+                            //return; //await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
                         _answer = null;
                         _userQuestion = null;
-                        Thread.Sleep(1500);
-                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
                         _answerExistence = false;
                         return;
                     }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace GoogleTablesWorking
 {
@@ -64,6 +65,15 @@ namespace GoogleTablesWorking
         /// <param name="data"></param>
         private static void FillSpreadsheet(SheetsService service, string spreadsheetId, string[] data)
         {
+            // Нахождение свободной десятки
+            var diapason = Task.Run(() => Diapason(service, spreadsheetId));
+            var tenner = diapason.Result;
+
+            // Нахождение свободной единицы
+            var task = Task.Run(() => FindFreeRow(service, spreadsheetId, tenner));
+            var row = task.Result;
+
+
             List<Request> requests = new List<Request>();
             List<CellData> values = new List<CellData>();
 
@@ -83,7 +93,7 @@ namespace GoogleTablesWorking
                     Start = new GridCoordinate
                     {
                         SheetId = 0,
-                        RowIndex = FindFreeRow(service, spreadsheetId),
+                        RowIndex = row - 1,
                         ColumnIndex = 0
                     },
                     Rows = new List<RowData>
@@ -108,41 +118,108 @@ namespace GoogleTablesWorking
         /// </summary>
         /// <param name="service"></param>
         /// <param name="spreadsheetId"></param>
+        /// <param name="tenner"></param>
         /// <returns></returns>
-        private static int FindFreeRow(SheetsService service, string spreadsheetId)
+        private static async Task<int> FindFreeRow(SheetsService service, string spreadsheetId, int tenner)
         {
             SpreadsheetsResource.ValuesResource.GetRequest.ValueRenderOptionEnum valueRenderOption = 0;
             SpreadsheetsResource.ValuesResource.GetRequest.DateTimeRenderOptionEnum dateTimeRenderOption = 0;
 
-            bool emptyRow = false;
-            int rowNumber = 1;
+            int rowNumber = 0;
+            int firstcount = 1;
 
-            while (emptyRow == false)
+            if (tenner < 10)
             {
-                string range = $"A{rowNumber}:D{rowNumber}";
+                firstcount = tenner;
+            }
+            else firstcount = tenner - 10;
+
+            int secondcount = firstcount + 10;
+
+            for (rowNumber = firstcount; rowNumber < secondcount; rowNumber++)
+            {
+                string range = $"A{rowNumber}";
 
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     service.Spreadsheets.Values.Get(spreadsheetId, range);
                 request.ValueRenderOption = valueRenderOption;
                 request.DateTimeRenderOption = dateTimeRenderOption;
-
-                ValueRange response = request.Execute();
-
-                var jsonobj = JsonConvert.SerializeObject(response);
-                dynamic obj = JsonConvert.DeserializeObject(jsonobj);
-
-                var values = obj.values;
-
-                if (values != null)
+                try
                 {
-                    rowNumber++;
+                    ValueRange response = await request.ExecuteAsync();
+
+                    var jsonobj = JsonConvert.SerializeObject(response);
+                    dynamic obj = JsonConvert.DeserializeObject(jsonobj);
+
+                    var values = obj.values;
+
+                    if (values != null)
+                    {
+                        if (rowNumber == secondcount - 1)
+                        {
+                            firstcount += 10;
+                            secondcount += 10;
+                        }
+                    }
+                    if (values == null)
+                    {
+                        return rowNumber;
+                    }
+                }
+                catch
+                {
                     continue;
                 }
-
-                emptyRow = true;
             }
+            return rowNumber;
+        }
 
-            return rowNumber - 1;
+        private static async Task<int> Diapason(SheetsService service, string spreadsheetId)
+        {
+            SpreadsheetsResource.ValuesResource.GetRequest.ValueRenderOptionEnum valueRenderOption = 0;
+            SpreadsheetsResource.ValuesResource.GetRequest.DateTimeRenderOptionEnum dateTimeRenderOption = 0;
+
+
+            int tenner = 0;
+            int firstcount = 1;
+            int secondcount = 100;
+
+            for (tenner = firstcount; tenner < secondcount; tenner += 10)
+            {
+                string range = $"A{tenner}";
+
+                SpreadsheetsResource.ValuesResource.GetRequest request =
+                    service.Spreadsheets.Values.Get(spreadsheetId, range);
+                request.ValueRenderOption = valueRenderOption;
+                request.DateTimeRenderOption = dateTimeRenderOption;
+                try
+                {
+                    ValueRange response = await request.ExecuteAsync();
+
+                    var jsonobj = JsonConvert.SerializeObject(response);
+                    dynamic obj = JsonConvert.DeserializeObject(jsonobj);
+
+                    var values = obj.values;
+
+                    if (values != null)
+                    {
+                        if (tenner == secondcount - 9)
+                        {
+                            firstcount += 100;
+                            secondcount += 100;
+                        }
+                    }
+                    if (values == null)
+                    {
+                        return tenner;
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+            return tenner;
         }
 
         private static string ShowMoskowTime()
