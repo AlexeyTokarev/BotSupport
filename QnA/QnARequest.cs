@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace QnA
 {
@@ -19,9 +20,13 @@ namespace QnA
             var qnamakerUriBase = new Uri(UrlAddress);
             var builder = new UriBuilder($"{qnamakerUriBase}/knowledgebases/{knowledgebaseId}/generateAnswer");
 
+            // Вычищаем двойные кавычки
+            Regex regex = new Regex("\"");
+            query = regex.Replace(query, "");
+
             // Добавление вопроса как части тела
             var postBody = $"{{\"question\": \"{query}\"}}";
-
+            
             // Отсылаем ПОСТ запрос
             using (var client = new WebClient())
             {
