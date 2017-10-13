@@ -3,6 +3,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
 using BotSupport.Dialogs.Redirecting_To_Operator;
@@ -91,11 +92,11 @@ namespace BotSupport.Dialogs
                     if (activity.Text.ToLower() == "нет")
                     {
                         //await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
-                       
+
                         await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
                         Thread.Sleep(1500);
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
-                        
+
                         try
                         {
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
@@ -285,11 +286,18 @@ namespace BotSupport.Dialogs
                         return;
                     }
 
+                    string strRegex = @"(\!\[alt text\])\((ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9А-Яа-я \-\.\?\,\'\/\\\+&amp;%\$#_]*)?([ ])?(\""?[a-zA-Z0-9А-Яа-я]*\""?)?\)([;\.,\!\?])?";
+                    Regex myRegex = new Regex(strRegex);
+                    string imageSubanswer = String.Empty;
+
+                    // Создание копии ответа, для корректного занесения в таблицу ответов 
+                    string copyAnswer = _answer;
+
                     // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
                     if (_answer.Length > 3500)
                     {
-                        // Создание копии ответа, для корректного занесения в таблицу ответов 
-                        string copyAnswer = _answer;
+                        bool wasImages = false;
+                        int startPoint = 0;
                         while (copyAnswer.Length > 3500)
                         {
                             var substringPoint = 3500;
@@ -302,18 +310,71 @@ namespace BotSupport.Dialogs
                             }
 
                             var subanswer = copyAnswer.Substring(0, substringPoint + 1);
+                            bool img = false;
 
-                            await context.PostAsync(subanswer);
-                            copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
+
+                            foreach (Match myMatch in myRegex.Matches(subanswer))
+                            {
+                                if (!myMatch.Success)
+                                {
+                                    await context.PostAsync(subanswer);
+                                    continue;
+                                }
+                                wasImages = true;
+                                imageSubanswer = subanswer.Substring(startPoint, (myMatch.Index - startPoint) + myMatch.Length);
+
+                                await context.PostAsync(imageSubanswer);
+                                startPoint = myMatch.Index + myMatch.Length;
+
+                                img = true;
+                            }
+
+                            if (!wasImages) await context.PostAsync(subanswer.Substring(startPoint));
+                            _answerExistence = true;
+                            if (img) copyAnswer = copyAnswer.Remove(0, startPoint);
+                            else copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
                         }
-                        await context.PostAsync(copyAnswer);
+
+                        startPoint = 0;
+
+                        foreach (Match myMatch in myRegex.Matches(copyAnswer))
+                        {
+                            if (!myMatch.Success)
+                            {
+                                await context.PostAsync(copyAnswer.Substring(startPoint));
+                                continue;
+                            }
+
+                            imageSubanswer = copyAnswer.Substring(startPoint, (myMatch.Index - startPoint) + myMatch.Length);
+                            wasImages = true;
+                            await context.PostAsync(imageSubanswer);
+                            startPoint = myMatch.Index + myMatch.Length;
+                        }
+                        if (!wasImages) await context.PostAsync(copyAnswer);
+                        else await context.PostAsync(copyAnswer.Substring(startPoint));
+
                         _answerExistence = true;
                     }
                     else
                     {
-                        await context.PostAsync(_answer);
+                        int startPoint = 0;
+                        foreach (Match myMatch in myRegex.Matches(copyAnswer))
+                        {
+                            if (!myMatch.Success)
+                            {
+                                await context.PostAsync(_answer);
+                                continue;
+                            }
+                            imageSubanswer = copyAnswer.Substring(startPoint, (myMatch.Index - startPoint) + myMatch.Length);
+
+                            await context.PostAsync(imageSubanswer);
+                            startPoint = myMatch.Index + myMatch.Length;
+                        }
+                        await context.PostAsync(copyAnswer.Substring(startPoint));
+
                         _answerExistence = true;
                     }
+
                     Thread.Sleep(1500);
                     CardDialog.SatisfyingAnswer(context, activity);
                 }
@@ -322,7 +383,6 @@ namespace BotSupport.Dialogs
                     await context.PostAsync("Что-то пошло не так");
                 }
             }
-            //context.Wait(MessageReceivedAsync);
         }
 
 
