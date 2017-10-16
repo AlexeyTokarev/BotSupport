@@ -287,7 +287,7 @@ namespace BotSupport.Dialogs
                         return;
                     }
 
-                    string strRegex = @"(\!\[alt text\])\((ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9А-Яа-я \-\.\?\,\'\/\\\+&amp;%\$#_]*)?([ ])?(\""?[a-zA-Z0-9А-Яа-я]*\""?)?\)([;\.,\!\?])?";
+                    string strRegex = @"(\!\[(alt text)?\])\((ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9А-Яа-я \-\.\?\,\'\/\\\+&amp;%\$#_]*)?([ ])?(\""?[a-zA-Z0-9А-Яа-я]*\""?)?\)([;\.,\!\?])?";
                     Regex myRegex = new Regex(strRegex);
                     string imageSubanswer = String.Empty;
 
