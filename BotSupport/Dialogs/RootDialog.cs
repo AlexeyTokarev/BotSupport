@@ -270,8 +270,9 @@ namespace BotSupport.Dialogs
                     {
                         _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        //throw new Exception(ex.Message);
                         await context.PostAsync("Что-то пошло не так");
                     }
 
@@ -331,7 +332,11 @@ namespace BotSupport.Dialogs
 
                             if (!wasImages) await context.PostAsync(subanswer.Substring(startPoint));
                             _answerExistence = true;
-                            if (img) copyAnswer = copyAnswer.Remove(0, startPoint);
+                            if (img)
+                            {
+                                copyAnswer = copyAnswer.Remove(0, startPoint);
+                                startPoint = 0;
+                            }
                             else copyAnswer = copyAnswer.Remove(0, substringPoint + 1);
                         }
 
@@ -378,8 +383,9 @@ namespace BotSupport.Dialogs
                     Thread.Sleep(1500);
                     CardDialog.SatisfyingAnswer(context, activity);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    //throw new Exception(ex.Message);
                     await context.PostAsync("Что-то пошло не так");
                 }
             }
