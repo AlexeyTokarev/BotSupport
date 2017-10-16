@@ -385,8 +385,8 @@ namespace BotSupport.Dialogs
                 }
                 catch (Exception ex)
                 {
-                    //throw new Exception(ex.Message);
-                    await context.PostAsync("Что-то пошло не так");
+                    throw new Exception(ex.Message);
+                    //await context.PostAsync("Что-то пошло не так");
                 }
             }
         }
