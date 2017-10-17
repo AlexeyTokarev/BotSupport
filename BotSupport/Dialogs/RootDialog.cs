@@ -270,7 +270,7 @@ namespace BotSupport.Dialogs
                     {
                         _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
                     }
-                    catch (Exception ex)
+                    catch// (Exception ex)
                     {
                         //throw new Exception(ex.Message);
                         await context.PostAsync("Что-то пошло не так");
@@ -383,12 +383,13 @@ namespace BotSupport.Dialogs
                     Thread.Sleep(1500);
                     CardDialog.SatisfyingAnswer(context, activity);
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
                     //throw new Exception(ex.Message);
                     await context.PostAsync("Что-то пошло не так");
                 }
             }
+            context.Wait(MessageReceivedAsync);
         }
 
 

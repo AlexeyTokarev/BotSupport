@@ -26,7 +26,11 @@ namespace BotSupport.Dialogs
                 "пока",
                 "до свидания",
                 "досвидания",
-                "всего доброго"
+                "всего доброго",
+                "c,hjc",
+                "c<hjc",
+                "gjrf",
+                "jnvtyf"
             };
 
             return resetPhrases.Contains(query.ToLower());
