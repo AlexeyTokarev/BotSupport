@@ -302,7 +302,6 @@ namespace BotSupport.Dialogs
                         while (copyAnswer.Length > 3500)
                         {
                             var substringPoint = 3500;
-                            await context.PostAsync("Point");
                             // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
                             // Причем разделение проводится по предложениям (Ориентиром является точка)
                             while (copyAnswer[substringPoint] != '.')
@@ -383,10 +382,10 @@ namespace BotSupport.Dialogs
                     Thread.Sleep(1500);
                     CardDialog.SatisfyingAnswer(context, activity);
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
-                    throw new Exception(ex.Message);
-                    //await context.PostAsync("Что-то пошло не так");
+                    //throw new Exception(ex.Message);
+                    await context.PostAsync("Что-то пошло не так");
                 }
             }
             context.Wait(MessageReceivedAsync);
