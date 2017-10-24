@@ -302,7 +302,7 @@ namespace BotSupport.Dialogs
                         while (copyAnswer.Length > 3500)
                         {
                             var substringPoint = 3500;
-
+                            await context.PostAsync("Point");
                             // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
                             // Причем разделение проводится по предложениям (Ориентиром является точка)
                             while (copyAnswer[substringPoint] != '.')
