@@ -25,14 +25,14 @@ namespace BotSupport.Dialogs
                 var cardButton = new List<CardAction>();
                 var card1 = new CardAction()
                 {
-                    Value = "223-ФЗ",
-                    Title = "223-ФЗ"
-                };
-                var card2 = new CardAction()
-                {
                     Value = "44-ФЗ",
                     Title = "44-ФЗ"
                 };
+                var card2 = new CardAction()
+                {
+                    Value = "223-ФЗ",
+                    Title = "223-ФЗ"
+                };                
                 var card3 = new CardAction()
                 {
                     Value = "615-ПП РФ",
