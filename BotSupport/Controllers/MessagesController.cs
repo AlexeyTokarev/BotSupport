@@ -29,8 +29,7 @@ namespace BotSupport
             }
             catch { }
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            //var response = Request.CreateResponse(HttpStatusCode.GatewayTimeout);
-            //if (response == Request.CreateErrorResponse(HttpStatusCode.GatewayTimeout, "Простите, мне надо немного подумать")) return response; 
+            if (response == Request.CreateErrorResponse(HttpStatusCode.GatewayTimeout, "Простите, мне надо немного подумать")) return response; 
             return response;
         }
 
