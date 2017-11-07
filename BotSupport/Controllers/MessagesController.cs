@@ -16,20 +16,16 @@ namespace BotSupport
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            try
+            if (activity.Type == ActivityTypes.Message)
             {
-                if (activity.Type == ActivityTypes.Message)
-                {
-                    await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
-                }
-                else
-                {
-                    HandleSystemMessage(activity);
-                }
+                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
-            catch { }
+            else
+            {
+                HandleSystemMessage(activity);
+            }
+
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            if (response == Request.CreateErrorResponse(HttpStatusCode.GatewayTimeout, "Простите, мне надо немного подумать")) return response; 
             return response;
         }
 
