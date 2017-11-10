@@ -19,7 +19,8 @@ namespace BotSupport
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Microsoft.Bot.Connector.Activity activity)
         {
-            var response = Request.CreateResponse(HttpStatusCode.OK);
+            if  (activity.From.Id == null) activity.From.Id = "qweasd";
+
             switch (activity.Type)
             {
                 case ActivityTypes.ConversationUpdate:
@@ -34,6 +35,7 @@ namespace BotSupport
                     }
                 default: HandleSystemMessage(activity); break;
             }
+            var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
             
             // -------Original code-------
