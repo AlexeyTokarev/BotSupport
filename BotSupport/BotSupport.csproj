@@ -161,6 +161,7 @@
     <Compile Include="Dialogs\Redirecting_To_Operator\OperatorsDialog.cs" />
     <Compile Include="Dialogs\ResetParametrs.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\StartConversation.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
