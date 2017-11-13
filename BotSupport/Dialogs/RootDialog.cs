@@ -79,8 +79,9 @@ namespace BotSupport.Dialogs
                             // Работа с гугл таблицами
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            throw new Exception(ex.Message);
                             //_userQuestion = null;
                             //_answer = null;
                             //_answerExistence = false;
@@ -107,8 +108,9 @@ namespace BotSupport.Dialogs
                             // Работа с гугл таблицами
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            throw new Exception(ex.Message);
                             //return; //await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
                         _answer = null;
