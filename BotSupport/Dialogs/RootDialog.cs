@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using BotSupport.Dialogs.Redirecting_To_Operator;
 using GoogleTablesWorking;
+using AzureTablesWorking;
 
 namespace BotSupport.Dialogs
 {
@@ -72,8 +73,11 @@ namespace BotSupport.Dialogs
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
 
                         try
-                        {
-                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
+                        { 
+                            // Работа с Azure Таблицами
+                            AddQuestionInAzureTable.AddData(_platform, _role, _userQuestion, _answer, activity.ChannelId, true);
+                            // Работа с гугл таблицами
+                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
                         catch
                         {
@@ -96,10 +100,12 @@ namespace BotSupport.Dialogs
                         await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
                         Thread.Sleep(1500);
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
-
                         try
                         {
-                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct);
+                            // Работа с Azure Таблицами
+                            AddQuestionInAzureTable.AddData(_platform, _role, _userQuestion, _answer, activity.ChannelId, false); 
+                            // Работа с гугл таблицами
+                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
                         catch
                         {

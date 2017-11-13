@@ -19,37 +19,37 @@ namespace BotSupport
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Microsoft.Bot.Connector.Activity activity)
         {
-            if  (activity.From.Id == null) activity.From.Id = "qweasd";
+            //if  (activity.From.Id == null) activity.From.Id = "qweasd";
 
-            switch (activity.Type)
-            {
-                case ActivityTypes.ConversationUpdate:
-                    {
-                        await Conversation.SendAsync(activity, () => new Dialogs.StartConversation());
-                        break;
-                    }
-                case ActivityTypes.Message:
-                    {
-                        await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
-                        break;
-                    }
-                default: HandleSystemMessage(activity); break;
-            }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
-            
-            // -------Original code-------
-            //if (activity.Type == ActivityTypes.Message)
+            //switch (activity.Type)
             //{
-            //    await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+            //    case ActivityTypes.ConversationUpdate:
+            //        {
+            //            await Conversation.SendAsync(activity, () => new Dialogs.StartConversation());
+            //            break;
+            //        }
+            //    case ActivityTypes.Message:
+            //        {
+            //            await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+            //            break;
+            //        }
+            //    default: HandleSystemMessage(activity); break;
             //}
-            //else
-            //{
-            //    HandleSystemMessage(activity);
-            //}
-
             //var response = Request.CreateResponse(HttpStatusCode.OK);
             //return response;
+
+            // -------Original code-------
+            if (activity.Type == ActivityTypes.Message)
+            {
+                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+            }
+            else
+            {
+                HandleSystemMessage(activity);
+            }
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            return response;
         }
 
         private Microsoft.Bot.Connector.Activity HandleSystemMessage(Microsoft.Bot.Connector.Activity message)

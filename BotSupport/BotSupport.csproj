@@ -189,6 +189,10 @@
       <Project>{84df3597-f73b-479f-9f95-0903525a5ee0}</Project>
       <Name>ApiAi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AzureTablesWorking\AzureTablesWorking.csproj">
+      <Project>{0565065f-bb27-4fee-add0-c3e98b270769}</Project>
+      <Name>AzureTablesWorking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GoogleTablesWorking\GoogleTablesWorking.csproj">
       <Project>{e5206b79-787a-4699-b7e7-48305b456ed9}</Project>
       <Name>GoogleTablesWorking</Name>
