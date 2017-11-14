@@ -23,8 +23,8 @@ namespace BotSupport.Dialogs
         private async Task Resume(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
             var activity = (Activity)await result;
-
-            if (!state.TryGetValue(activity.Conversation.Id, out bool sentGreeting))
+            bool sentGreeting;
+            if (!state.TryGetValue(activity.Conversation.Id, out sentGreeting))
             {
                 state[activity.Conversation.Id] = true;
                 await context.PostAsync("Здравствуйте! Я Технический Помощник РТС-Тендер.");
