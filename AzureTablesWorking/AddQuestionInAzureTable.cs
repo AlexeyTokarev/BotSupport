@@ -27,7 +27,7 @@ namespace AzureTablesWorking
             CustomerEntity data = new CustomerEntity(partitionKey, rowKey)
             {
                 Platform = platform,
-                Role = role,
+                Role = CorrectRole(platform, role),
                 Question = question,
                 Answer = answer,
                 DateAndTime = ShowMoskowTime(),
@@ -49,6 +49,63 @@ namespace AzureTablesWorking
             string moskowDate = dateTime.ToString("dd-MM-yyyy HH:mm:ss");
             return moskowDate;
         }
+        public static string CorrectRole(string defaultPlatform, string defaultRole)
+        {
+            string role;
+            switch (defaultPlatform)
+            {
+                case "223-ФЗ":
+                    switch (defaultRole)
+                    {
+                        case "Заказчик": role = defaultRole; break;
+                        case "Поставщик": role = "Участник"; break;
+                        default: role = defaultRole; break;
+                    }
+                    break;
+
+                case "44-ФЗ":
+                    switch (defaultRole)
+                    {
+                        case "Заказчик": role = defaultRole; break;
+                        case "Поставщик": role = "Участник"; break;
+                        default: role = defaultRole; break;
+                    }
+                    break;
+
+                case "615-ПП РФ":
+                    switch (defaultRole)
+                    {
+                        case "Заказчик": role = defaultRole; break;
+                        case "Поставщик": role = "Участник"; break;
+                        case "ОВР": role = defaultRole; break;
+                        default: role = defaultRole; break;
+                    }
+                    break;
+
+                case "Имущественные торги":
+                    switch (defaultRole)
+                    {
+                        case "Продавец": role = "Продавец/Арендодатель"; break;
+                        case "Покупатель": role = "Претендент/Арендатор"; break;
+                        default: role = defaultRole; break;
+                    }
+                    break;
+
+                case "РТС-Маркет":
+                    switch (defaultRole)
+                    {
+                        case "Заказчик": role = defaultRole; break;
+                        case "Поставщик": role = defaultRole; break;
+                        default: role = defaultRole; break;
+                    }
+                    break;
+
+                default: role = defaultRole; break;
+
+            }
+
+            return role;
+        }
     }
     public class CustomerEntity : TableEntity
     {
@@ -69,4 +126,6 @@ namespace AzureTablesWorking
         public string Channel { get; set; }
         public string Device { get; set; }
     }
+
+
 }
