@@ -12,19 +12,13 @@ namespace BotSupport
 {
     [BotAuthentication]
     public class MessagesController : ApiController
-    {
-        //static bool first = false;
+    {       
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Microsoft.Bot.Connector.Activity activity)
         {
-            if (activity.ChannelId == "skype")// && !first)
-            {
-                activity.Type = "message";
-                activity.Text = "Привет";                
-            }
             switch (activity.Type)
             {
                 case ActivityTypes.ConversationUpdate:
