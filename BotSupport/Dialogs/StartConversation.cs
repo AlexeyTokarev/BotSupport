@@ -27,7 +27,7 @@ namespace BotSupport.Dialogs
             if (!state.TryGetValue(activity.Conversation.Id, out sentGreeting))
             {
                 state[activity.Conversation.Id] = true;
-                await context.PostAsync("Здравствуйте! Я Технический Помощник РТС-Тендер.");
+                await context.PostAsync("Здравствуйте! Я Бот Электронной площадки РТС-тендер.");
                 Thread.Sleep(1500);
                 CardDialog.PlatformCard(context, activity, ParametrsDialog.CheckParametrs(null,null));
                 context.Done<object>(null);
