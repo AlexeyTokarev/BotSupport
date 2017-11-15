@@ -23,6 +23,10 @@ namespace BotSupport.Dialogs
                 replyToConversation.Attachments = new List<Attachment>();
 
                 var cardButton = new List<CardAction>();
+                //---------------------------
+                var cardButtonFB1 = new List<CardAction>();
+                var cardButtonFB2 = new List<CardAction>();
+                //---------------------------
                 var card1 = new CardAction()
                 {
                     Value = "44-ФЗ",
@@ -54,7 +58,35 @@ namespace BotSupport.Dialogs
                 cardButton.Add(card3);
                 cardButton.Add(card4);
                 cardButton.Add(card5);
+                //---------------------------
+                if (activity.ChannelId == "facebook")
+                {
+                    cardButtonFB1.Add(card1);
+                    cardButtonFB1.Add(card2);
+                    cardButtonFB1.Add(card3);
+                    cardButtonFB2.Add(card4);
+                    cardButtonFB2.Add(card5);
 
+                    var heroFB1 = new HeroCard()
+                    {
+                        Buttons = cardButtonFB1,
+                        Text = checkParametrs
+                    };
+                    var heroFB2 = new HeroCard()
+                    {
+                        Buttons = cardButtonFB2,
+                        Text = string.Empty
+                    };
+                    var attachFB1 = heroFB1.ToAttachment();
+                    var attachFB2 = heroFB2.ToAttachment();
+
+                    replyToConversation.Attachments.Add(attachFB1);
+                    //context.PostAsync(replyToConversation);
+                    replyToConversation.Attachments.Add(attachFB2);
+                    context.PostAsync(replyToConversation);
+                    return;
+                }
+                //---------------------------
                 var hero = new HeroCard()
                 {
                     Buttons = cardButton,
