@@ -22,12 +22,12 @@ namespace BotSupport.Dialogs
         private string _userQuestion;   // Вопрос пользователя
         private string _answer;         // Ответ пользователя
         private bool _correct;          // Проверка корректности выданного ответа
-
+        
         // Для работы с перенаправлением сообщений оператору
         private static bool _operatorsConversation;
         static ConversationResourceResponse convId;
         private static string _userId = String.Empty; // Id пользователя. Предназначено для участка кода, работающего с перенаправлением сообщений оператору
-
+        private static bool _isFirst = true;
 
 
         public Task StartAsync(IDialogContext context)
@@ -39,7 +39,11 @@ namespace BotSupport.Dialogs
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
-
+            if (_isFirst && activity.ChannelId != "webchat" && activity.ChannelId != "emulator")
+            {
+                await context.PostAsync("Здравствуйте! Я Бот Электронной площадки РТС-тендер.");
+                _isFirst = false;
+            }
             // Проверка на разговор с оператором
             if (_operatorsConversation)
             {
