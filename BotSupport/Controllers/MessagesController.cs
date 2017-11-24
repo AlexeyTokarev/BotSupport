@@ -12,7 +12,7 @@ namespace BotSupport
 {
     [BotAuthentication]
     public class MessagesController : ApiController
-    {       
+    {
         /// <summary>
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
@@ -23,6 +23,7 @@ namespace BotSupport
             {
                 case ActivityTypes.ConversationUpdate:
                     {
+                        if (activity.ChannelId != "webchat" && activity.ChannelId != "emulator") break;
                         await Conversation.SendAsync(activity, () => new Dialogs.StartConversation());
                         break;
                     }

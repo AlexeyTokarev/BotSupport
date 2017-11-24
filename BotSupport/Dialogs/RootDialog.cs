@@ -71,7 +71,6 @@ namespace BotSupport.Dialogs
                     if (activity.Text.ToLower() == "да")
                     {
                         _correct = true;
-                        //await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
                         await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
                         Thread.Sleep(1500);
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
@@ -100,8 +99,6 @@ namespace BotSupport.Dialogs
                     }
                     if (activity.Text.ToLower() == "нет")
                     {
-                        //await context.PostAsync("Подождите, пожалуйста, Ваш ответ обрабатывается");
-
                         await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
                         Thread.Sleep(1500);
                         await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
