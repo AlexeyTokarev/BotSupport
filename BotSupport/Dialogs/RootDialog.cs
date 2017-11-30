@@ -303,14 +303,15 @@ namespace BotSupport.Dialogs
                     // Создание копии ответа, для корректного занесения в таблицу ответов 
                     string copyAnswer = _answer;
 
+                    int intervalPoint = activity.ChannelId == "facebook" ? 600 : 3500;
                     // Проверка длины сообщения. Делается потому, как некоторые мессенджеры имеют ограничения на длину сообщения
-                    if (_answer.Length > 3500)
+                    if (_answer.Length > intervalPoint)
                     {
                         bool wasImages = false;
                         int startPoint = 0;
-                        while (copyAnswer.Length > 3500)
+                        while (copyAnswer.Length > intervalPoint)
                         {
-                            var substringPoint = 3500;
+                            var substringPoint = intervalPoint;
                             // Данный цикл обрабатывает возможность корректного разделения больших сообщений на более мелкие
                             // Причем разделение проводится по предложениям (Ориентиром является точка)
                             while (copyAnswer[substringPoint] != '.')
