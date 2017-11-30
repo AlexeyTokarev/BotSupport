@@ -75,7 +75,7 @@ namespace BotSupport.Dialogs
                     var heroFB2 = new HeroCard()
                     {
                         Buttons = cardButtonFB2,
-                        Text = "\t"
+                        Text = "Вас также могут заинтересовать:"
                     };
                     var attachFB1 = heroFB1.ToAttachment();
                     var attachFB2 = heroFB2.ToAttachment();
