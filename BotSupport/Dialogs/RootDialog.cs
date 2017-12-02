@@ -78,7 +78,7 @@ namespace BotSupport.Dialogs
                         try
                         { 
                             // Работа с Azure Таблицами
-                            AddQuestionInAzureTable.AddData(_platform, _role, _userQuestion, _answer, activity.ChannelId, true);
+                            AddQuestionInAzureTable.UpdateData(_platform, _role, _userQuestion, _answer, activity.ChannelId, true);
                             // Работа с гугл таблицами
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
@@ -105,7 +105,7 @@ namespace BotSupport.Dialogs
                         try
                         {
                             // Работа с Azure Таблицами
-                            AddQuestionInAzureTable.AddData(_platform, _role, _userQuestion, _answer, activity.ChannelId, false); 
+                            AddQuestionInAzureTable.UpdateData(_platform, _role, _userQuestion, _answer, activity.ChannelId, false); 
                             // Работа с гугл таблицами
                             AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
@@ -296,6 +296,12 @@ namespace BotSupport.Dialogs
                         return;
                     }
 
+                    try
+                    {
+                        // Работа с Azure Таблицами
+                        AddQuestionInAzureTable.AddData(_platform, _role, _userQuestion, _answer, activity.ChannelId);
+                    }
+                    catch { }
                     string strRegex = @"(\!\[(alt text)?\])\((ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9А-Яа-я \-\.\?\,\'\/\\\+&amp;%\$#_]*)?([ ])?(\""?[a-zA-Z0-9А-Яа-я]*\""?)?\)([;\.,\!\?])?";
                     Regex myRegex = new Regex(strRegex);
                     string imageSubanswer = String.Empty;

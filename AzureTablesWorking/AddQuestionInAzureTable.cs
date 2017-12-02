@@ -11,7 +11,9 @@ namespace AzureTablesWorking
 {
     public static class AddQuestionInAzureTable
     {
-        public static void AddData(string platform, string role, string question, string answer, string channel, bool isCorrect)
+        private static string _partitionKey;
+        private static string _rowKey;
+        public static void AddData(string platform, string role, string question, string answer, string channel)
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
             CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
@@ -19,21 +21,21 @@ namespace AzureTablesWorking
             table.CreateIfNotExists();
 
             Guid firstGuid = Guid.NewGuid();
-            string partitionKey = firstGuid.ToString();
+            _partitionKey = firstGuid.ToString();
 
             Guid secondGuid = Guid.NewGuid();
-            string rowKey = secondGuid.ToString();
-
-            CustomerEntity data = new CustomerEntity(partitionKey, rowKey)
+            _rowKey = secondGuid.ToString();
+            
+            CustomerEntity data = new CustomerEntity(_partitionKey, _rowKey)
             {
                 Platform = platform,
                 Role = CorrectRole(platform, role),
                 Question = question,
                 Answer = answer,
                 DateAndTime = ShowMoskowTime(),
-                IsCorrect = isCorrect,
+                IsCorrect = "Не определено",
                 Channel = channel,
-                Device = string.Empty,
+                Device = string.Empty
             };
 
             // Create the TableOperation object that inserts the customer entity.
@@ -42,6 +44,35 @@ namespace AzureTablesWorking
             // Execute the insert operation.
             table.Execute(insertOperation);
         }
+
+        public static void UpdateData(string platform, string role, string question, string answer, string channel, bool isCorrect)
+        {
+            string correctToString = isCorrect ? "true" : "false";
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+            CloudTable table = tableClient.GetTableReference("Answers");
+            table.CreateIfNotExists();
+            CustomerEntity data = new CustomerEntity(_partitionKey, _rowKey)
+            {
+                Platform = platform,
+                Role = CorrectRole(platform, role),
+                Question = question,
+                Answer = answer,
+                DateAndTime = ShowMoskowTime(),
+                IsCorrect = correctToString,
+                Channel = channel,
+                Device = string.Empty,
+            };
+
+            TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(data);
+            table.Execute(insertOrReplaceOperation);
+            //// Create the TableOperation object that inserts the customer entity.
+            //TableOperation insertOperation = TableOperation.Insert(data);
+
+            //// Execute the insert operation.
+            //table.Execute(insertOperation);
+        }
+
         private static string ShowMoskowTime()
         {
             TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time");
@@ -122,7 +153,7 @@ namespace AzureTablesWorking
         public string Question { get; set; }
         public string Answer { get; set; }
         public string DateAndTime { get; set; }
-        public bool IsCorrect { get; set; }
+        public string IsCorrect { get; set; }
         public string Channel { get; set; }
         public string Device { get; set; }
     }
