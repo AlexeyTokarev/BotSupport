@@ -71,16 +71,12 @@ namespace BotSupport.Dialogs
                     if (activity.Text.ToLower() == "да")
                     {
                         _correct = true;
-                        await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
-                        Thread.Sleep(1500);
-                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
-
                         try
                         { 
                             // Работа с Azure Таблицами
                             AddQuestionInAzureTable.UpdateData(_platform, _role, _userQuestion, _answer, activity.ChannelId, true);
                             // Работа с гугл таблицами
-                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
+                            // AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
                         catch //(Exception ex)
                         {
@@ -91,6 +87,11 @@ namespace BotSupport.Dialogs
                             //_correct = false;
                             //return;//await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
+
+                        await context.PostAsync("Благодарю, Ваш ответ очень помог нам");
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+
                         _userQuestion = null;
                         _answer = null;
                         _answerExistence = false;
@@ -99,21 +100,23 @@ namespace BotSupport.Dialogs
                     }
                     if (activity.Text.ToLower() == "нет")
                     {
-                        await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
-                        Thread.Sleep(1500);
-                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
+                        
                         try
                         {
                             // Работа с Azure Таблицами
                             AddQuestionInAzureTable.UpdateData(_platform, _role, _userQuestion, _answer, activity.ChannelId, false); 
                             // Работа с гугл таблицами
-                            AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
+                            // AddQuestionInGoogleSheet.SendError(_platform, _role, _userQuestion, _answer, _correct); 
                         }
                         catch //(Exception ex)
                         {
                             //throw new Exception(ex.Message);
                             //return; //await context.PostAsync("Возникли проблемы с обработкой Вашего ответа");
                         }
+
+                        await context.PostAsync("Большое спасибо. Ваше сообщение передано в службу технической поддержки. Приносим извинения за неудобство");
+                        Thread.Sleep(1500);
+                        await context.PostAsync("Если Вас еще что-то интересует, напишите тему");
                         _answer = null;
                         _userQuestion = null;
                         _answerExistence = false;
