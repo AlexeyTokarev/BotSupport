@@ -115,7 +115,7 @@ namespace BotSupport.Dialogs
                         //qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
                         break;
                     }
-                case "РТС-Маркет":
+                case "Электронный магазин ЗМО":
                     {
                         switch (role)
                         {

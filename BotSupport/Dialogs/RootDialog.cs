@@ -15,7 +15,7 @@ namespace BotSupport.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
-        private string _platform;       // Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "РТС-Маркет")
+        private string _platform;       // Площадка, по которой пользователь хочет получить консультацию ("223-ФЗ", "44-ФЗ", "615-ФЗ", "Имущество", "Электронный магазин ЗМО")
         private string _role;           // Какова роль пользователя ("Заказчик", "Поставщик")
         private bool _parametrs;        // Быстрая проверка наличия всех параметров
         private bool _answerExistence;  // Проверка наличия ответов 
@@ -220,7 +220,7 @@ namespace BotSupport.Dialogs
                                     await context.PostAsync("Что-то пошло не так");
                                 }
                             }
-                            if (_platform == "РТС-Маркет")
+                            if (_platform == "Электронный магазин ЗМО")
                             {
                                 try
                                 {

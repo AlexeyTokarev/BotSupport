@@ -49,8 +49,8 @@ namespace BotSupport.Dialogs
                 };
                 var card5 = new CardAction()
                 {
-                    Value = "РТС-Маркет",
-                    Title = "РТС-Маркет"
+                    Value = "Электронный магазин ЗМО",
+                    Title = "Электронный магазин ЗМО"
                 };
 
                 cardButton.Add(card1);
@@ -224,7 +224,7 @@ namespace BotSupport.Dialogs
             context.PostAsync(replyToConversation);
         }
         /// <summary>
-        /// Метод, определяющий роль пользователя по площадке "РТС-Маркет"
+        /// Метод, определяющий роль пользователя по площадке "Электронный магазин ЗМО"
         /// </summary>
         /// <param name="context"></param>
         /// <param name="activity"></param>

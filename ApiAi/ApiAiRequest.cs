@@ -35,7 +35,7 @@ namespace ApiAi
                 string platform = response.Result.Parameters["Platform"].ToString();
 
                 if (platform == "223-ФЗ" || platform == "44-ФЗ" || platform == "615-ПП РФ" || platform == "Имущественные торги" ||
-                    platform == "РТС-Маркет")
+                    platform == "Электронный магазин ЗМО")
                 {
                     result.Platform = platform;
                 }

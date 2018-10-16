@@ -272,7 +272,7 @@ namespace GoogleTablesWorking
                     }
                     break;
 
-                case "РТС-Маркет":
+                case "Электронный магазин ЗМО":
                     switch (defaultRole)
                     {
                         case "Заказчик": role = defaultRole; break;
