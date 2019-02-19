@@ -9,7 +9,7 @@ namespace QnA
     public class QnARequest
     {
         // Адрес для запроса к базе знаний QnA Maker
-        private const string UrlAddress = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0";
+        private const string UrlAddress = "https://rts-support-qna.azurewebsites.net/qnamaker";
 
         public static string QnAResponse(string knowledgebaseId, string qnamakerSubscriptionKey, string query)
         {
