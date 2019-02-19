@@ -49,8 +49,8 @@ namespace BotSupport.Dialogs
                         {
                             case "Заказчик":
                                 {
-                                    knowledgebaseId = "a77093cc-0654-403e-9e71-2104a2735c10";
-                                    qnamakerSubscriptionKey = "850a8ac4def146498ab7e2161cd87c9d";
+                                    knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
+                                    qnamakerSubscriptionKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
                                     break;
                                 }
                             case "Поставщик":
