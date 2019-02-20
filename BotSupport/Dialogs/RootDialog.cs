@@ -280,7 +280,8 @@ namespace BotSupport.Dialogs
                     _userQuestion = activity.Text;
                     try
                     {
-                        _answer = new QnADialog().QnABotResponse(_platform, _role, _userQuestion);
+                        var qnaDialog = new QnADialog();
+                        _answer = await qnaDialog.QnABotResponse(_platform, _role, _userQuestion);
                     }
                     catch// (Exception ex)
                     {
