@@ -9,17 +9,15 @@ namespace QnA
 {
     public class QnARequest
     {
-        // Адрес для запроса к базе знаний QnA Maker
-        private const string UrlAddress = "https://rts-support-qna.azurewebsites.net";
         private const string Service = "/qnamaker";
 
-        public static async Task<string> QnAResponse(string knowledgebaseId, string endPointKey, string question)
+        public static async Task<string> QnAResponse(string urlAddress, string knowledgebaseId, string endPointKey, string question)
         {
             string responseInJson;
             string qnaResult;
 
             var method = "/knowledgebases/" + knowledgebaseId + "/generateAnswer/";
-            var uri = UrlAddress + Service + method;
+            var uri = urlAddress + Service + method;
             var postBody = $"{{\"question\": \"{question}\"}}";
 
             try

@@ -39,7 +39,7 @@ namespace BotSupport.Dialogs.Redirecting_To_Operator
                 }
             }
 
-            string textForOperator = "Кукусики";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
+            string textForOperator = "Привет";//$"Площадка: {platform}\nРоль: {role}\nВопрос: {userQuestion}";
 
             IMessageActivity message = Activity.CreateMessageActivity();
             message.From = operatorsAccount;
