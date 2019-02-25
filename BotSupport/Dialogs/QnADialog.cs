@@ -28,14 +28,14 @@ namespace BotSupport.Dialogs
                         {
                             case "Заказчик":
                                 {
-                                    knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "f47d5d4d-020c-4bfa-a1b8-ff7e6dd9006d";
+                                    endpointKey = "8b92d007-3e61-4b97-9c16-78b43c1137c9";
                                     break;
                                 }
                             case "Поставщик":
                                 {
-                                    knowledgebaseId = "fb284162-92fa-4abf-a572-dbb9902ed237";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "e404ca60-4053-40ab-b7b7-a4e6253d098c";
+                                    endpointKey = "64ef379e-fe25-41f8-a6ab-9631f104a5af";
                                     break;
                                 }
                         }
@@ -72,20 +72,20 @@ namespace BotSupport.Dialogs
                         {
                             case "Заказчик":
                                 {
-                                    knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "ab2ff4af-54aa-4ae9-88d3-fed812c59867";
+                                    endpointKey = "0f4b263c-c124-48ad-a643-46cca0183079";
                                     break;
                                 }
                             case "Поставщик":
                                 {
-                                    knowledgebaseId = "fb284162-92fa-4abf-a572-dbb9902ed237";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "70080988-383e-447d-812f-d57ebbefa08e";
+                                    endpointKey = "2f589635-ace0-449c-b1f7-3809417dbd1b";
                                     break;
                                 }
                             case "ОВР":
                                 {
-                                knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
-                                endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                knowledgebaseId = "bb3a09d3-1eed-4762-9e93-75ee0f48847b";
+                                endpointKey = "64ef379e-fe25-41f8-a6ab-9631f104a5af";
                                 break;
                                 }
                         }
@@ -100,14 +100,14 @@ namespace BotSupport.Dialogs
                         {
                             case "Продавец":
                                 {
-                                    knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "37a04429-a3ae-4b79-be22-75f05522ee6e";
+                                    endpointKey = "0f4b263c-c124-48ad-a643-46cca0183079";
                                     break;
                                 }
                             case "Покупатель":
                                 {
-                                    knowledgebaseId = "fb284162-92fa-4abf-a572-dbb9902ed237";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "340c3a9f-7631-47a8-b1ce-03396e159c85";
+                                    endpointKey = "c00ebcf1-f0cb-46f4-bdc5-73652ae5c3d8";
                                     break;
                                 }
                         }
@@ -122,14 +122,14 @@ namespace BotSupport.Dialogs
                         {
                             case "Заказчик":
                                 {
-                                    knowledgebaseId = "d4171504-e07b-45cf-89ff-179ceb96ae06";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "c282ad4b-f315-42dd-a553-36dbc1424ccf";
+                                    endpointKey = "8b92d007-3e61-4b97-9c16-78b43c1137c9";
                                     break;
                                 }
                             case "Поставщик":
                                 {
-                                    knowledgebaseId = "fb284162-92fa-4abf-a572-dbb9902ed237";
-                                    endpointKey = "e1ef79e9-ae78-47fe-bace-5758e56d494a";
+                                    knowledgebaseId = "7327b727-f804-4115-a13a-83d81b81d3cf";
+                                    endpointKey = "8a592c05-f40d-4159-b6c5-25ad06d5034a";
                                     break;
                                 }
                         }
